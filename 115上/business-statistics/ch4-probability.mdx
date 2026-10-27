@@ -15,6 +15,7 @@ import Funnel from "../_components/Funnel.tsx";
 import BagDraw from "../_components/BagDraw.tsx";
 import ChainProbability from "../_components/ChainProbability.tsx";
 import BayesUpdate from "../_components/BayesUpdate.tsx";
+import PopulationSteps from "../_components/PopulationSteps.tsx";
 
 ## 代號意思表 {#symbol-table}
 
@@ -772,6 +773,19 @@ $$
 P(D\mid T^+)=\frac{P(D\cap T^+)}{P(T^+)}=\frac{0.002\times0.90}{0.002\times0.90+0.998\times0.05}=\frac{450}{12925}\approx3.48\%
 $$
 
+這題容易亂的地方是：四個數字的**母體各不相同**。條件機率直線 $\mid$ 後面的事件就是母體（分母）：
+
+| 數字 | 寫成機率 | 母體 |
+|---|---|---|
+| 盛行率 0.2% | $P(D)$ | 全部入境旅客 |
+| 敏感度 90% | $P(T^+\mid D)$ | 只有感染者 |
+| 偽陽性率 5% | $P(T^+\mid\bar D)$ | 只有未感染者 |
+| 要求的答案 | $P(D\mid T^+)$ | 只有驗出陽性的人 |
+
+一步一步看母體怎麼換（粗框是當下的母體，填色是要數的那群人）：
+
+<PopulationSteps title="入境旅客普篩" base={250000} hypotheses={[{ label: "感染", prior: 0.002, likelihood: 0.9 }, { label: "未感染", prior: 0.998, likelihood: 0.05 }]} pos="陽性" neg="陰性" />
+
 即使檢驗呈陽性，實際感染的機率只有約 3.48%。原因是盛行率太低：未感染的人數太多，5% 的偽陽性在人數上就壓過了真正的感染者。拉動盛行率看看事後機率怎麼變：
 
 <BayesUpdate title="入境旅客普篩" evidence="驗出陽性" hypotheses={[{ label: "感染", prior: 0.002, likelihood: 0.9 }, { label: "未感染", prior: 0.998, likelihood: 0.05 }]} base={250000} />
@@ -784,6 +798,10 @@ $$
 2. 偽陽性路徑：$P(\bar D)\times(1-Sp)=0.999\times0.05=0.04995$。
 3. $P(T^+)=0.00095+0.04995=0.0509$。
 4. $P(D\mid T^+)=0.00095/0.0509\approx0.01866$，約 **1.866%**。
+
+以 100,000 人為基準逐步看母體怎麼換：
+
+<PopulationSteps title="某族群的快篩" base={100000} hypotheses={[{ label: "患病", prior: 0.001, likelihood: 0.95 }, { label: "未患病", prior: 0.999, likelihood: 0.05 }]} pos="陽性" neg="陰性" />
 
 ### 例子：零件與 AI 檢測 {#ex-bayes-ai .fold}
 
@@ -801,6 +819,8 @@ $$
 
 99% 的準確率聽起來很高，但警報響起時零件真的壞掉的機率只有約 9%。
 
+<PopulationSteps title="零件與 AI 檢測" base={1000} hypotheses={[{ label: "不良品", prior: 0.001, likelihood: 0.99 }, { label: "良品", prior: 0.999, likelihood: 0.01 }]} pos="響警報" neg="沒響" />
+
 ### 例子：乳房攝影 {#ex-bayes-mammogram .fold}
 
 40 歲女性的乳癌盛行率 1.4%，乳房攝影敏感度 75%，未罹癌者的偽陽性率 10%。檢驗結果呈陽性，真的罹癌的機率？（四捨五入至小數第四位）
@@ -812,6 +832,8 @@ $$
 | 合計 | 1.000 | | $P(MP)=0.1091$ | 1 |
 
 陽性女性實際罹癌的機率僅 0.0962（約 9.62%）。以 1,000 位為基準：罹癌 14 位中 10.5 位陽性，未罹癌 986 位中 98.6 位陽性，陽性的 109.1 位中只有 10.5 位真的罹癌。
+
+<PopulationSteps title="乳房攝影" base={1000} hypotheses={[{ label: "罹乳癌", prior: 0.014, likelihood: 0.75 }, { label: "未罹癌", prior: 0.986, likelihood: 0.1 }]} pos="陽性" neg="陰性" />
 
 <BayesUpdate title="乳房攝影" evidence="檢驗陽性" hypotheses={[{ label: "罹乳癌", prior: 0.014, likelihood: 0.75 }, { label: "未罹癌", prior: 0.986, likelihood: 0.1 }]} base={1000} />
 
@@ -830,6 +852,10 @@ $$
 
 雖然俄亥俄廠產量較大，維吉尼亞廠的不良率是兩倍，乘起來它貢獻的瑕疵品比較多，所以應負較大責任。事後機率比的其實就是各路徑的聯合機率大小。
 
+以 1,000 塊瓷磚為基準逐步看：
+
+<PopulationSteps title="瑕疵瓷磚的來源工廠" base={1000} hypotheses={[{ label: "Ohio", prior: 0.6, likelihood: 0.05 }, { label: "Virginia", prior: 0.4, likelihood: 0.1 }]} pos="有缺陷" neg="沒缺陷" compare />
+
 <BayesUpdate title="瑕疵瓷磚的來源工廠" evidence="有缺陷" hypotheses={[{ label: "Virginia", prior: 0.4, likelihood: 0.1 }, { label: "Ohio", prior: 0.6, likelihood: 0.05 }]} base={1000} />
 
 ### 例子：第二次簡報 {#ex-bayes-presentation .fold}
@@ -843,6 +869,8 @@ $$
 
 被要求二次簡報這個新證據，把成交機率從 60% 提升到 67.74%（提升 7.74 個百分點），是正面訊號，值得投入更多資源準備。
 
+<PopulationSteps title="第二次簡報" base={100} hypotheses={[{ label: "成交", prior: 0.6, likelihood: 0.7 }, { label: "失敗", prior: 0.4, likelihood: 0.5 }]} pos="要二次簡報" neg="沒要求" />
+
 ### 例子：瑕疵巧克力是誰包裝的 {#ex-bayes-chocolate .fold}
 
 三位員工負責包裝：員工 1 負責 40%、瑕疵率 2.0%；員工 2 負責 30%、瑕疵率 2.5%；員工 3 負責 30%、瑕疵率 1.5%。顧客投訴一盒瑕疵巧克力，最可能是誰包的？
@@ -855,6 +883,8 @@ $$
 | 合計 | 1 | | $P(D)=0.0200$ | 1 |
 
 員工 1 最有可能（40%）。雖然員工 2 的個人瑕疵率最高，員工 1 的包裝量最大，以 10,000 盒為基準，員工 1 造成 80 盒瑕疵、員工 2 只有 75 盒。
+
+<PopulationSteps title="瑕疵巧克力的包裝員工" base={10000} hypotheses={[{ label: "員工 1", prior: 0.4, likelihood: 0.02 }, { label: "員工 2", prior: 0.3, likelihood: 0.025 }, { label: "員工 3", prior: 0.3, likelihood: 0.015 }]} pos="瑕疵" neg="正常" compare />
 
 <BayesUpdate title="瑕疵巧克力的包裝員工" evidence="有瑕疵" hypotheses={[{ label: "員工 1", prior: 0.4, likelihood: 0.02 }, { label: "員工 2", prior: 0.3, likelihood: 0.025 }, { label: "員工 3", prior: 0.3, likelihood: 0.015 }]} base={10000} />
 

@@ -6,6 +6,7 @@ order: 5
 
 import ExpectationTable from "../_components/ExpectationTable.tsx";
 import DiscreteDistExplorer from "../_components/DiscreteDistExplorer.tsx";
+import DrawSteps from "../_components/DrawSteps.tsx";
 
 ## 名詞表 {#glossary}
 
@@ -413,6 +414,10 @@ $$
 P(X=3)=\frac{C(5,3)\,C(10,3)}{C(15,6)}=\frac{10\times120}{5005}\approx0.2398
 $$
 
+逐步看大寫（母體）與小寫（樣本）各是什麼：
+
+<DrawSteps title="15 名員工抽 6 名，恰好 3 名女性" unit="人" categories={[{ label: "女性", total: 5, pick: 3 }, { label: "男性", total: 10, pick: 3 }]} symbols={[["K", "x"], ["N−K", "n−x"]]} />
+
 若改問「至少 2 名女性」，要算 $x=2,\dots,5$ 共 4 項；改用餘補只要算 2 項：
 
 $$
@@ -483,6 +488,8 @@ $$
 P(3,2,0)=\frac{C(5,3)\,C(4,2)\,C(5,0)}{C(14,5)}=\frac{10\times6\times1}{2002}\approx0.0300
 $$
 
+<DrawSteps title="二手車商選 5 輛：3 福特、2 通用、0 豐田" unit="輛" categories={[{ label: "福特", total: 5, pick: 3 }, { label: "通用", total: 4, pick: 2 }, { label: "豐田", total: 5, pick: 0 }]} />
+
 ### 例子：新產品樣品 {#ex-mhyper-samples .fold}
 
 100 件樣品：A 型 40、B 型 30、C 型 20、D 型 10。抽 15 件，恰好 5 A、4 B、3 C、3 D？檢查 $5+4+3+3=15$、$40+30+20+10=100$。
@@ -490,6 +497,8 @@ $$
 $$
 P=\frac{C(40,5)\,C(30,4)\,C(20,3)\,C(10,3)}{C(100,15)}=\frac{658008\times27405\times1140\times120}{2.5334\times10^{17}}\approx0.00974
 $$
+
+<DrawSteps title="100 件樣品抽 15 件：5 A、4 B、3 C、3 D" unit="件" categories={[{ label: "A 型", total: 40, pick: 5 }, { label: "B 型", total: 30, pick: 4 }, { label: "C 型", total: 20, pick: 3 }, { label: "D 型", total: 10, pick: 3 }]} />
 
 ### 例子：飲品偏好調查 {#ex-mhyper-drinks .fold}
 

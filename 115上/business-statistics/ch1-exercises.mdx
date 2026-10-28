@@ -1,0 +1,196 @@
+---
+title: 第一章 複習習題
+summary: 第一章課後複習 15 題選擇題：母體與樣本、敘述與推論統計、測量尺度、未回應偏誤、收集數據的方法（實驗、調查、觀察）、四種機率抽樣與抽樣距離、普查、統計量與偏誤樣本
+order: 1.5
+tags: [習題]
+---
+
+import Choice from "../_components/Choice.tsx";
+
+## 研究關心的全部個體 {#q-population}
+
+In a study, the entire group of individuals about which information is desired is called the:
+
+<Choice options={["Sample", "Population", "Statistic", "Parameter"]} answer="B" />
+
+### 詳解 {#q-population-solution .fold}
+
+**答案：B. Population（母體）**
+
+母體是研究中所關心的全部個體或項目。例如研究者想知道學生對新上線數位學習系統的滿意度，母體就是全校學生。從母體中實際抽出來調查的那一部分才是樣本（Sample）。見 [[ch1-intro#population-sample|母體與樣本]]。
+
+## 敘述統計的定義 {#q-descriptive}
+
+Which of the following best describes descriptive statistics?
+
+<Choice options={["Summarizing data using charts and numerical measures", "Drawing conclusions from data using probability", "Making predictions about a population based on a sample", "Testing hypotheses about population parameters"]} answer="A" />
+
+### 詳解 {#q-descriptive-solution .fold}
+
+**答案：A**
+
+敘述統計（descriptive statistics）用圖表和數值量度來整理、呈現資料的特性。B、C、D 都是用樣本推論母體，屬於推論統計。見 [[ch1-intro#descriptive-inferential|敘述統計與推論統計]]。
+
+## 交通方式的測量尺度 {#q-nominal}
+
+Identifying a person's preferred mode of transportation — such as car, bicycle, train, or bus — is an example of the _______ level of measurement.
+
+<Choice options={["ratio", "nominal", "interval", "ordinal"]} answer="B" />
+
+### 詳解 {#q-nominal-solution .fold}
+
+**答案：B. nominal（名目尺度）**
+
+汽車、自行車、火車、公車只是互斥的類別，沒有大小、順序或距離，所以是名目尺度（又稱類別尺度）。其他例子：血型 O／A／B／AB；性別編成「男 = 1、女 = 2」時，數字只是代號，不能說 2 大於 1。見 [[ch1-intro#measurement-scales|四種測量尺度]]。
+
+## 未回應偏誤 {#q-nonresponse}
+
+In data collection, nonresponse bias occurs when:
+
+<Choice options={["The population is not well-defined", "The sample size is too small", "Data is recorded inaccurately", "Selected individuals do not participate"]} answer="D" />
+
+### 詳解 {#q-nonresponse-solution .fold}
+
+**答案：D**
+
+未回應偏誤（nonresponse bias）是被抽中的人沒有參與調查。願意回應的人和不回應的人想法可能不同，樣本就不再具代表性。見 [[ch1-intro#data-collection-issues|收集數據的六項問題]]。
+
+## 不屬於收集數據的方法 {#q-not-collection}
+
+原題題幹誤貼成第一題的句子，依選項與解析，題意是：Which of the following is NOT a method of data collection?
+
+<Choice options={["Experiment", "Survey", "Observation", "Calculation"]} answer="D" />
+
+### 詳解 {#q-not-collection-solution .fold}
+
+**答案：D. Calculation**
+
+實驗、調查、觀察都是收集數據的方法；計算（calculation）是拿到資料之後的分析步驟，不是收集方法。見 [[ch1-intro#data-collection|收集數據的五種方法]]。
+
+## 選 10 所高中調查全部學生 {#q-cluster}
+
+You are an education researcher interested in studying high school students' opinions on online learning. Due to limited time and budget, you randomly select 10 high schools and then survey all students within those selected schools. What type of sampling method are you using?
+
+<Choice options={["Simple Random Sampling", "Stratified Sampling", "Systematic Sampling", "Cluster Sampling"]} answer="D" />
+
+### 詳解 {#q-cluster-solution .fold}
+
+**答案：D. Cluster Sampling（群集抽樣）**
+
+群集抽樣把母體分成許多群集（學校、班級、地區），隨機抽出幾個群集，再調查被抽中群集裡的**所有**成員。這題的群集是學校：隨機抽 10 所，調查每所的全部學生。
+
+和分層抽樣的差別：分層是每一層都抽一些人；群集是只抽某些群，但抽中的群全部調查。見 [[ch1-intro#cluster|群集抽樣]]。
+
+## 推論統計的例子 {#q-inferential}
+
+Which of the following is an example of inferential statistics?
+
+<Choice options={["Calculating the average sales from last month", "Listing the number of employees in each department", "Creating a bar chart of product categories", "Estimating next quarter's sales based on current data"]} answer="D" />
+
+### 詳解 {#q-inferential-solution .fold}
+
+**答案：D**
+
+推論統計用手上的資料去估計或預測未知的母體特性或未來。「用目前資料估計下一季銷售」是預測未知，屬於推論。A、B、C 只是整理已有的資料（平均、計數、畫圖），屬於敘述統計。
+
+## 系統抽樣的抽樣距離 {#q-interval-k}
+
+You are a public health researcher planning to assess citizens' health conditions using systematic random sampling. You have a complete list of 12,000 citizens (the population), and you have decided to survey a sample of 600 individuals. What should your sampling interval (K) be?
+
+<Choice options={["20", "10", "25", "30"]} answer="A" />
+
+### 詳解 {#q-interval-k-solution .fold}
+
+**答案：A. 20**
+
+系統抽樣的抽樣距離 $k=N/n$：
+
+$$
+k=\frac{12{,}000}{600}=20
+$$
+
+從前 20 人中隨機選一個起點，之後每隔 20 人抽一個。見 [[ch1-intro#systematic|系統抽樣]]。
+
+## 每個子群都抽的抽樣法 {#q-stratified}
+
+Which sampling method divides the population into subgroups and selects a sample from each subgroup?
+
+<Choice options={["Cluster sampling", "Stratified sampling", "Systematic sampling", "Simple random sampling"]} answer="B" />
+
+### 詳解 {#q-stratified-solution .fold}
+
+**答案：B. Stratified sampling（分層抽樣）**
+
+分層抽樣把母體分成不同子群（層），再從**每一層**各抽樣本，確保每個子群都有代表。見 [[ch1-intro#stratified|分層抽樣]]。
+
+## 普查 {#q-census}
+
+Which of the following best defines a census?
+
+<Choice options={["Population", "Sample", "Parameter", "Statistic"]} answer="A" />
+
+### 詳解 {#q-census-solution .fold}
+
+**答案：A. Population**
+
+普查（census）是對整個母體做全面的資料收集（a complete count of a population），所以對應的是母體，而不是樣本。
+
+## 描述樣本特徵的數值 {#q-statistic}
+
+The numerical measure that describes a characteristic of a sample is called a:
+
+<Choice options={["Data point", "Parameter", "Variable", "Statistic"]} answer="D" />
+
+### 詳解 {#q-statistic-solution .fold}
+
+**答案：D. Statistic（統計量）**
+
+描述**樣本**特徵的數值是統計量（如樣本平均數 $\bar x$）；描述**母體**特徵的是參數（如母體平均數 $\mu$）。記法：Sample 對 Statistic，Population 對 Parameter，字首相同。見 [[ch1-intro#parameter-statistic|參數與統計量]]。
+
+## 每隔 k 個抽一個 {#q-systematic}
+
+Which sampling method involves selecting every kth individual from a list?
+
+<Choice options={["Simple random sampling", "Cluster sampling", "Systematic sampling", "Stratified sampling"]} answer="C" />
+
+### 詳解 {#q-systematic-solution .fold}
+
+**答案：C. Systematic sampling（系統抽樣）**
+
+系統抽樣從排好順序的名單中，每隔固定間隔 $k$ 抽一個樣本。
+
+## 新品先在一個城市試賣 {#q-experiment}
+
+A company tests a new product in one city before a nationwide launch. This is an example of:
+
+<Choice options={["Census", "Experiment", "Observation", "Survey"]} answer="B" />
+
+### 詳解 {#q-experiment-solution .fold}
+
+**答案：B. Experiment（實驗）**
+
+公司主動安排新品在一個城市上市，再觀察結果，是在控制條件下測試某個變數（新產品）的影響，屬於實驗。調查是去問人的意見；觀察是不介入、只記錄。
+
+## 了解顧客滿意度的方法 {#q-survey}
+
+A company wants to understand customer satisfaction. Which data collection method is most appropriate?
+
+<Choice options={["Observation", "Survey", "Experiment", "Simulation"]} answer="B" />
+
+### 詳解 {#q-survey-solution .fold}
+
+**答案：B. Survey（調查）**
+
+滿意度是顧客心裡的看法，看不出來，只能用問卷、電話訪問等調查方式直接問顧客。
+
+## 偏誤樣本 {#q-biased-sample}
+
+A biased sample is one that:
+
+<Choice options={["Is larger than necessary", "Accurately represents the population", "Parameter", "Systematically favors certain outcomes"]} answer="D" />
+
+### 詳解 {#q-biased-sample-solution .fold}
+
+**答案：D**
+
+偏誤樣本（biased sample）是抽樣過程**系統性地**偏向某些結果，使樣本無法代表母體。B 正好相反，是沒有偏誤的樣本。

@@ -1,0 +1,379 @@
+---
+title: 第四章 複習習題
+summary: 第四章課後複習 13 題：用相對頻率從列聯表求邊際、聯合與條件機率，加法與乘法法則、獨立性判斷、主觀機率，貝氏定理與全機率公式（加油站抽獎），以及獨立事件的「至少一個」與「全部失敗」
+order: 4.5
+tags: [習題]
+---
+
+import Choice from "../_components/Choice.tsx";
+import ContingencyTable from "../_components/ContingencyTable.tsx";
+import BayesUpdate from "../_components/BayesUpdate.tsx";
+import PopulationSteps from "../_components/PopulationSteps.tsx";
+
+## 401(k) 帳戶餘額與性別 {#q-401k}
+
+（課本）一家中型公司對 2,500 名有 401(k) 退休帳戶的員工做普查（小數第三位）：
+
+| 帳戶餘額（美元） | Male | Female |
+|---|---|---|
+| 25,000 以下 | 635 | 495 |
+| 25,000 – 49,999 | 185 | 210 |
+| 50,000 – 99,999 | 515 | 260 |
+| 100,000 以上 | 155 | 45 |
+
+研究人員要從公司隨機抽員工做後續研究。
+
+- a. 依相對頻率法，抽到女性的機率？
+- b. 依相對頻率法，抽到帳戶餘額在 25,000 到 49,999 之間的機率？
+- c. 抽到「女性且餘額在 50,000 到 99,999 之間」的機率？
+
+### 詳解 {#q-401k-solution .fold}
+
+先補合計：Male 1,490、Female 1,010，總數 2,500。
+
+**a.** 邊際機率，取 Female 整欄：$P(\text{F})=1010/2500=0.404$。
+
+**b.** 邊際機率，取該列整列：$(185+210)/2500=395/2500=0.158$。
+
+**c.** 聯合機率，只取一格：$260/2500=0.104$。
+
+<ContingencyTable title="2500 名員工依 401(k) 餘額與性別分類" rowTitle="帳戶餘額" colTitle="性別" rows={["25,000 以下", "25,000–49,999", "50,000–99,999", "100,000 以上"]} cols={["Male", "Female"]} counts={[[635, 495], [185, 210], [515, 260], [155, 45]]} initialRow={2} initialCol={1} focus="union" />
+
+見 [[ch4-probability#relative-frequency|相對頻率]]。
+
+## 由條件機率求交集與聯集 {#q-e1-and-b}
+
+三個事件 $P(E_1)=0.35$、$P(E_2)=0.15$、$P(E_3)=0.40$。另知 $P(E_1\mid B)=0.25$、$P(B)=0.30$（小數第三位）。
+
+- a. $P(E_1\cap B)$
+- b. $P(E_1\cup B)$
+- c. 若 $E_1,E_2,E_3$ 彼此獨立，求 $P(E_1\cap E_2\cap E_3)$。
+
+### 詳解 {#q-e1-and-b-solution .fold}
+
+**a.** 一般乘法規則（Rule 8）：
+
+$$
+P(E_1\cap B)=P(E_1\mid B)\,P(B)=0.25\times0.30=0.075
+$$
+
+**b.** 任意兩事件的加法（Rule 4），要扣掉重複算的交集：
+
+$$
+P(E_1\cup B)=0.35+0.30-0.075=0.575
+$$
+
+**c.** 獨立事件的乘法（Rule 9），直接相乘：
+
+$$
+P(E_1\cap E_2\cap E_3)=0.35\times0.15\times0.40=0.021
+$$
+
+見 [[ch4-probability#rule-8|一般乘法規則]]、[[ch4-probability#rule-4|任意兩事件的加法]]。
+
+## 兩位朋友賭球賽的機率 {#q-pat-tom}
+
+老朋友 Pat 和 Tom 很多事都意見一致，就是對美聯冠軍和世界大賽的結果看法不同。Pat 來自波士頓，Tom 來自紐約。他們賭一頓牛排晚餐：Pat 押紅襪、Tom 押洋基，兩人都相信自己會贏。
+
+a. 兩位朋友用的是哪一種機率評估方法？
+
+<Choice options={["相對頻率法（Relative Frequency Approach）", "經驗機率法（Empirical Probability Approach）", "古典機率法（Classical Probability Approach）", "主觀機率法（Subjective Probability Approach）"]} answer="D" />
+
+b. 為什麼相對頻率法不適用於這個情況？
+
+<Choice options={["因為無法列出該比賽的所有可能樣本空間", "因為明年的賽事屬於不可在完全相同條件下重複進行的單一獨特事件", "因為兩隊獲勝的機率必定嚴格等於 0.5", "因為兩人的賭注包含個人利益（牛排大餐）"]} answer="B" />
+
+### 詳解 {#q-pat-tom-solution .fold}
+
+**a. 答案：D. 主觀機率法**
+
+兩人都只是憑自己的信念和經驗判斷「我支持的隊會贏」，沒有可以計算的公式或歷史比例，屬於主觀機率。
+
+**b. 答案：B**
+
+相對頻率法要把同一個試驗在相同條件下重複很多次，再看發生的比例。明年的賽季只會發生一次，球員、對手、狀況都不一樣，無法重複，所以只能用主觀機率。見 [[ch4-probability#subjective-probability|主觀機率]]。
+
+## 磁碟機供應商的瑕疵率 {#q-disk-drives}
+
+（課本 4-33）Dell 品管經理檢驗 700 個磁碟機（小數第四位）：
+
+| Supplier | Working | Defective |
+|---|---|---|
+| Company A | 120 | 10 |
+| Company B | 180 | 15 |
+| Company C | 50 | 5 |
+| Company D | 300 | 20 |
+
+- a. 隨機抽一個磁碟機，來自 B 公司的機率？
+- b. 收到瑕疵磁碟機的機率？
+- c. 已知由 B 公司供應，是瑕疵品的機率？
+
+### 詳解 {#q-disk-drives-solution .fold}
+
+合計：A 130、B 195、C 55、D 320；Working 650、Defective 50。
+
+**a.** $P(B)=195/700=0.2786$。
+
+**b.** $P(\text{Defective})=50/700=0.0714$。
+
+**c.** 條件機率，分母縮小成 B 公司那一列：
+
+$$
+P(\text{Defective}\mid B)=\frac{15}{195}=0.0769
+$$
+
+<ContingencyTable title="700 個磁碟機依狀態與供應商分類" rowTitle="狀態" colTitle="供應商" rows={["Working", "Defective"]} cols={["Company A", "Company B", "Company C", "Company D"]} counts={[[120, 180, 50, 300], [10, 15, 5, 20]]} initialRow={1} initialCol={1} focus="given" />
+
+這題和課本筆記的 [[ch4-probability#exercise-4-33|習題 4-33：磁碟機供應商]] 相同。
+
+## 三個事件的貝氏後驗機率 {#q-bayes-three}
+
+$P(E_1)=0.35$、$P(E_2)=0.25$、$P(E_3)=0.40$；$P(B\mid E_1)=0.25$、$P(B\mid E_2)=0.15$、$P(B\mid E_3)=0.60$（小數第四位）。
+
+求 $P(E_1\mid B)$、$P(E_2\mid B)$、$P(E_3\mid B)$。
+
+### 詳解 {#q-bayes-three-solution .fold}
+
+先算每條路徑的聯合機率 $P(E_i)P(B\mid E_i)$，加起來就是全機率 $P(B)$：
+
+| | $P(E_i)$ | $P(B\mid E_i)$ | $P(E_i\cap B)$ | $P(E_i\mid B)$ |
+|---|---|---|---|---|
+| $E_1$ | 0.35 | 0.25 | 0.0875 | $0.0875/0.365=0.2397$ |
+| $E_2$ | 0.25 | 0.15 | 0.0375 | $0.0375/0.365=0.1027$ |
+| $E_3$ | 0.40 | 0.60 | 0.2400 | $0.24/0.365=0.6575$ |
+| 合計 | 1 | | $P(B)=0.365$ | 1 |
+
+$$
+P(E_1\mid B)=\frac{P(E_1)P(B\mid E_1)}{\sum_i P(E_i)P(B\mid E_i)}=\frac{0.0875}{0.365}=0.2397
+$$
+
+觀察到 B 之後，$E_3$ 的機率從 0.40 升到 0.6575，因為 $E_3$ 最容易產生 B。三個後驗機率加起來是 1。
+
+<BayesUpdate title="三個事件的後驗機率" evidence="B 發生" hypotheses={[{ label: "E1", prior: 0.35, likelihood: 0.25 }, { label: "E2", prior: 0.25, likelihood: 0.15 }, { label: "E3", prior: 0.4, likelihood: 0.6 }]} base={1000} />
+
+見 [[ch4-probability#bayes|貝氏定理]]。
+
+## 加油站免費加油抽獎 {#q-free-gas}
+
+加油站品管經理想讓「免費加油抽獎」對所有顧客都公平。顧客依消費分成兩個互斥的群組：
+
+- **群組 1**（佔 95%）：消費未滿 30 美元，發票金額平均分布在 20.00 到 29.99 美元之間的 1,000 種金額（以分計）。發票金額剛好是 21.11、22.22、23.33、24.44、25.55、26.66、27.77、28.88、29.99 這 9 個金額之一就中獎。
+- **群組 2**（佔 5%）：消費 30 美元以上，從裝有 100 顆球（99 紅、1 白）的箱子裡盲抽一顆，抽到白球就中獎。
+
+隨機選一位顧客，中獎的總機率是多少？（小數第五位）
+
+### 詳解 {#q-free-gas-solution .fold}
+
+這是全機率公式：分組計算「在這組中獎」的機率，再依各組比例加權相加。
+
+- $P(\text{中獎}\mid\text{群組 1})=9/1000=0.009$
+- $P(\text{中獎}\mid\text{群組 2})=1/100=0.01$
+
+$$
+P(\text{中獎})=0.95\times0.009+0.05\times0.01=0.00855+0.0005=0.00905
+$$
+
+<PopulationSteps title="加油站免費加油抽獎" base={100000} hypotheses={[{ label: "群組 1（未滿 30 美元）", prior: 0.95, likelihood: 0.009 }, { label: "群組 2（30 美元以上）", prior: 0.05, likelihood: 0.01 }]} pos="中獎" neg="沒中" />
+
+見 [[ch4-probability#total-probability|分母：全機率公式]]。
+
+## 逾期發票的來源與天數 {#q-invoices}
+
+（課本）Micron Technology 在達拉斯、西雅圖、波士頓、洛杉磯四地有業務處，逾期發票依天數統計如下（小數第四位）：
+
+| 逾期天數 | Dallas | Seattle | Boston | Los Angeles |
+|---|---|---|---|---|
+| 30 天以下 | 137 | 122 | 198 | 287 |
+| 30–60 天 | 85 | 46 | 76 | 109 |
+| 61–90 天 | 33 | 27 | 55 | 48 |
+| 90 天以上 | 18 | 32 | 45 | 66 |
+
+發票都存在中央資料庫。
+
+- a. 隨機抽一張發票，來自波士頓的機率？
+- b. 逾期 30 到 90 天的機率？
+- c. 逾期超過 90 天且來自西雅圖的機率？
+- d. 已知來自洛杉磯，逾期 60 天以內的機率？
+
+### 詳解 {#q-invoices-solution .fold}
+
+合計：Dallas 273、Seattle 227、Boston 374、Los Angeles 510，總數 1,384。
+
+**a.** $374/1384=0.2702$。
+
+**b.** 30–60 天與 61–90 天兩列相加：$(316+163)/1384=479/1384=0.3461$。
+
+**c.** 一格：$32/1384=0.0231$。
+
+**d.** 條件機率，分母只剩洛杉磯那一欄 510；60 天以內是前兩列：
+
+$$
+P(\le60\text{ 天}\mid\text{LA})=\frac{287+109}{510}=\frac{396}{510}=0.7765
+$$
+
+<ContingencyTable title="1384 張逾期發票依天數與業務處分類" rowTitle="逾期天數" colTitle="業務處" rows={["30 天以下", "30–60 天", "61–90 天", "90 天以上"]} cols={["Dallas", "Seattle", "Boston", "Los Angeles"]} counts={[[137, 122, 198, 287], [85, 46, 76, 109], [33, 27, 55, 48], [18, 32, 45, 66]]} initialRow={3} initialCol={1} focus="union" />
+
+## 執行長的性別與專業背景 {#q-ceo}
+
+（課本）50 位中小企業執行長依性別與專業背景分類（小數第二位）：
+
+| 專業背景 | Male | Female | Total |
+|---|---|---|---|
+| Marketing | 4 | 10 | 14 |
+| Finance | 11 | 5 | 16 |
+| Operations | 17 | 3 | 20 |
+| Total | 32 | 18 | 50 |
+
+- a. 隨機抽一位執行長，是女性的機率？
+- b. 是「男性且背景為行銷」的機率？
+- c. 已知背景是營運（operations），是女性的機率？
+- d. 已知是女性，背景是行銷的機率？
+
+### 詳解 {#q-ceo-solution .fold}
+
+**a.** $18/50=0.36$。
+
+**b.** 一格：$4/50=0.08$。
+
+**c.** 已知 Operations，分母是那一列的 20：$P(\text{F}\mid\text{Ops})=3/20=0.15$。
+
+**d.** 已知 Female，分母是那一欄的 18：$P(\text{Mkt}\mid\text{F})=10/18=0.56$。
+
+c 和 d 的條件方向相反，分母不同：$P(A\mid B)$ 的分母永遠是「已知」那個事件。
+
+<ContingencyTable title="50 位執行長依專業背景與性別分類" rowTitle="專業背景" colTitle="性別" rows={["Marketing", "Finance", "Operations"]} cols={["Male", "Female"]} counts={[[4, 10], [11, 5], [17, 3]]} initialRow={0} initialCol={1} focus="given" />
+
+見 [[ch4-probability#rule-6|條件機率]]。
+
+## 列聯表的條件機率與餘集（一） {#q-ab-table-1}
+
+（課本）由下表計算 $P(A)$、$P(\bar A)$、$P(A\mid B)$、$P(\bar A\mid B)$、$P(A\mid\bar B)$、$P(\bar A\mid\bar B)$（小數第二位）：
+
+| | $A$ | $\bar A$ | Totals |
+|---|---|---|---|
+| $B$ | 200 | 800 | 1,000 |
+| $\bar B$ | 300 | 700 | 1,000 |
+| Totals | 500 | 1,500 | 2,000 |
+
+### 詳解 {#q-ab-table-1-solution .fold}
+
+- $P(A)=500/2000=0.25$，$P(\bar A)=1-0.25=0.75$。
+- 已知 $B$（分母 1,000）：$P(A\mid B)=200/1000=0.20$，$P(\bar A\mid B)=800/1000=0.80$。
+- 已知 $\bar B$（分母 1,000）：$P(A\mid\bar B)=300/1000=0.30$，$P(\bar A\mid\bar B)=700/1000=0.70$。
+
+條件機率也有餘集法則：在同一個條件下，$P(A\mid B)+P(\bar A\mid B)=1$。但 $P(A\mid B)+P(A\mid\bar B)$ 不一定是 1。
+
+<ContingencyTable title="2000 個觀察值依 A 與 B 分類" rowTitle="B" colTitle="A" rows={["B", "非 B"]} cols={["A", "非 A"]} counts={[[200, 800], [300, 700]]} initialRow={0} initialCol={0} focus="given" />
+
+## Fresno 房屋的價格與銷售天數 {#q-fresno}
+
+（課本）Fresno 獨棟住宅依價格區間與上市天數分類的銷售數（小數第四位）：
+
+| 價格（千美元） | 1–7 天 | 8–30 天 | 30 天以上 |
+|---|---|---|---|
+| 200 以下 | 125 | 15 | 30 |
+| 200–500 | 200 | 150 | 100 |
+| 501–1,000 | 400 | 525 | 175 |
+| 1,000 以上 | 125 | 140 | 35 |
+
+- a. 依相對頻率法，房子上市超過 7 天的機率？
+- b. 「上市 1–7 天」和「價格 200–500」是否獨立？
+- c. 某房子上市不到 8 天就賣出，最可能的價格區間是哪一個？（1. 200 以下，2. 200–500，3. 501–1,000，4. 1,000 以上）
+
+### 詳解 {#q-fresno-solution .fold}
+
+合計：各價格列 170、450、1,100、300；各天數欄 850、830、340；總數 2,020。
+
+**a.** 超過 7 天 = 8–30 天 + 30 天以上：$(830+340)/2020=1170/2020=0.5792$。
+
+**b.** **Not Independent**。獨立的條件是 $P(A\mid B)=P(A)$：
+
+$$
+P(1\text{–}7\text{ 天})=\frac{850}{2020}=0.4208,\qquad P(1\text{–}7\text{ 天}\mid 200\text{–}500)=\frac{200}{450}=0.4444
+$$
+
+兩者不相等，所以不獨立。
+
+**c.** **3**。已知 1–7 天，分母是那一欄 850，比較各價格的格子：125、200、400、125，最大是 501–1,000（$400/850=0.4706$）。
+
+<ContingencyTable title="2020 間 Fresno 房屋依價格與上市天數分類" rowTitle="價格（千美元）" colTitle="上市天數" rows={["200 以下", "200–500", "501–1,000", "1,000 以上"]} cols={["1–7 天", "8–30 天", "30 天以上"]} counts={[[125, 15, 30], [200, 150, 100], [400, 525, 175], [125, 140, 35]]} initialRow={1} initialCol={0} focus="given" />
+
+見 [[ch4-probability#independent-dependent|獨立與相依事件]]。
+
+## 聖誕節的天氣 {#q-christmas-weather}
+
+（課本）威斯康辛州 Racine 歷年聖誕節天氣的相對頻率（小數第二位）：
+
+| 天氣 | 相對頻率 |
+|---|---|
+| Clear & dry | 0.20 |
+| Cloudy & dry | 0.30 |
+| Rain | 0.40 |
+| Snow | 0.10 |
+
+- a. 明年聖誕節是乾燥（dry）的機率？
+- b. 下雨、或多雲且乾燥的機率？
+- c. 已知明年聖誕節是乾燥的，同時也是多雲的機率？
+
+### 詳解 {#q-christmas-weather-solution .fold}
+
+四種天氣互斥，機率可以直接相加。
+
+**a.** dry 包含 Clear & dry 和 Cloudy & dry：$0.20+0.30=0.50$。
+
+**b.** $P(\text{Rain})+P(\text{Cloudy \& dry})=0.40+0.30=0.70$。
+
+**c.** 條件機率：
+
+$$
+P(\text{Cloudy}\mid\text{Dry})=\frac{P(\text{Cloudy \& dry})}{P(\text{Dry})}=\frac{0.30}{0.50}=0.60
+$$
+
+## 列聯表的條件機率與餘集（二） {#q-ab-table-2}
+
+（課本）由下表計算以下機率（小數第一位）：
+
+| | $A$ | $\bar A$ | Totals |
+|---|---|---|---|
+| $B$ | 800 | 200 | 1,000 |
+| $\bar B$ | 600 | 400 | 1,000 |
+| Totals | 1,400 | 600 | 2,000 |
+
+- a. $P(A\mid B)$
+- b. $P(\bar A\mid\bar B)$
+- c. $P(\bar A\mid B)$
+- d. $P(A\mid\bar B)$
+
+### 詳解 {#q-ab-table-2-solution .fold}
+
+**a.** $800/1000=0.8$。
+
+**b.** $400/1000=0.4$。
+
+**c.** $200/1000=0.2$，也就是 $1-P(A\mid B)=1-0.8$。
+
+**d.** $600/1000=0.6$，也就是 $1-P(\bar A\mid\bar B)=1-0.4$。
+
+## 兩個獨立標案 {#q-two-bids}
+
+（課本）URS 營造公司投了兩個標案：倫敦的大飯店和一棟辦公大樓。公司認為拿到飯店標案的機率 40%，辦公大樓 25%，且兩者獨立（小數第二位）。
+
+- a. 兩個標案都拿到的機率？
+- b. 至少拿到一個的機率？
+- c. 兩個都沒拿到的機率？
+
+### 詳解 {#q-two-bids-solution .fold}
+
+設 $H$ = 拿到飯店，$O$ = 拿到辦公大樓，$P(H)=0.4$、$P(O)=0.25$。
+
+**a.** 獨立，直接相乘：$P(H\cap O)=0.4\times0.25=0.10$。
+
+**b.** 加法法則：$P(H\cup O)=0.4+0.25-0.10=0.55$。
+
+**c.** 兩個都沒拿到，用餘集再相乘（獨立事件的餘集也獨立）：
+
+$$
+P(\bar H\cap\bar O)=0.6\times0.75=0.45
+$$
+
+檢查：「至少一個」和「都沒有」互為餘集，$0.55+0.45=1$。見 [[ch4-probability#rule-9|獨立事件的乘法規則]]。

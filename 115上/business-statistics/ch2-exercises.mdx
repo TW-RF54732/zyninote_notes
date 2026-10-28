@@ -1,0 +1,308 @@
+---
+title: 第二章 複習習題
+summary: 第二章課後複習 15 題：偏態方向、中心測度、直方圖與折線圖等圖表用途，以及三題計算：AIG 投資人的聯合頻率分配、100 筆房貸餘額的群組頻率分配（2^k ≥ n）、60 筆資料的累加頻率分配與肩形圖
+order: 2.5
+tags: [習題]
+---
+
+import Choice from "../_components/Choice.tsx";
+import ContingencyTable from "../_components/ContingencyTable.tsx";
+import HistogramBuilder from "../_components/HistogramBuilder.tsx";
+
+## 尾巴拖向右邊的分配 {#q-right-skew}
+
+In a data set, if most values are clustered on the left and the tail extends to the right, the distribution is:
+
+<Choice options={["Symmetrical", "Skewed to the left", "Skewed to the right", "Uniform"]} answer="C" />
+
+### 詳解 {#q-right-skew-solution .fold}
+
+**答案：C. Skewed to the right（右偏）**
+
+偏態的方向看**尾巴**拖向哪一邊，不是看資料堆在哪一邊。資料集中在左邊、尾巴拖向右邊，就是右偏（正偏），此時平均數會被右尾拉大：平均數 > 中位數。見 [[ch3-descriptive#skewness|偏態與對稱]]。
+
+## 不是中心測度的量 {#q-not-center}
+
+Which of the following is NOT a measure of central tendency?
+
+<Choice options={["Median", "Mean", "Range", "Mode"]} answer="C" />
+
+### 詳解 {#q-not-center-solution .fold}
+
+**答案：C. Range（全距）**
+
+中心測度有平均數、中位數、眾數。全距 = 最大值 − 最小值，描述資料分散的程度，屬於變化測度。
+
+## 直方圖的用途 {#q-histogram-use}
+
+A histogram is used to display:
+
+<Choice options={["Relationships between variables", "Time series data", "Quantitative data distribution", "Categorical data"]} answer="C" />
+
+### 詳解 {#q-histogram-use-solution .fold}
+
+**答案：C**
+
+直方圖把**數量資料**分組後畫出各組的頻率，看分配的形狀。變數關係用散佈圖，時間序列用折線圖，類別資料用直條圖或圓餅圖。見 [[ch2-charts#histogram|直方圖]]。
+
+## 呈現時間趨勢的圖 {#q-trend-chart}
+
+Which chart is best for showing trends over time?
+
+<Choice options={["Bar chart", "Line graph", "Pie chart", "Histogram"]} answer="B" />
+
+### 詳解 {#q-trend-chart-solution .fold}
+
+**答案：B. Line graph（折線圖）**
+
+折線圖的橫軸是時間，把各期數值連起來，最適合看隨時間的變化趨勢。見 [[ch2-charts#line-chart|折線圖]]。
+
+## AIG 投資人的聯合頻率分配 {#q-aig-joint}
+
+（課本 2-11）AIG 調查 600 位投資人對自己投資知識的評價，其中 200 位是傳統投資人，其餘 400 位是線上投資人：
+
+| 投資類型 | Savvy | Experienced | Novice |
+|---|---|---|---|
+| Online | 8% | 55% | 37% |
+| Traditional | 4% | 29% | 67% |
+
+- a. 建立聯合頻率分配（次數）。
+- b. 建立聯合相對頻率分配（四捨五入到小數第四位）。
+- c. 既是線上投資人、又自評 experienced 的比例？
+- d. 線上投資人的比例？
+
+### 詳解 {#q-aig-joint-solution .fold}
+
+**a. 聯合頻率分配**：每一列的百分比乘上該列的人數。
+
+| 投資類型 | Savvy | Experienced | Novice | 合計 |
+|---|---|---|---|---|
+| Online | $400\times0.08=32$ | $400\times0.55=220$ | $400\times0.37=148$ | 400 |
+| Traditional | $200\times0.04=8$ | $200\times0.29=58$ | $200\times0.67=134$ | 200 |
+| 合計 | 40 | 278 | 282 | 600 |
+
+**b. 聯合相對頻率分配**：每一格除以總數 600。
+
+| 投資類型 | Savvy | Experienced | Novice | 合計 |
+|---|---|---|---|---|
+| Online | 0.0533 | 0.3667 | 0.2467 | 0.6667 |
+| Traditional | 0.0133 | 0.0967 | 0.2233 | 0.3333 |
+| 合計 | 0.0667 | 0.4633 | 0.4700 | 1.0000 |
+
+**c.** 「線上**且** experienced」是一格：$220/600=0.3667$。
+
+**d.** 「線上」是整列合計：$400/600=0.6667$。
+
+<ContingencyTable title="600 位投資人依投資類型與自評分類" rowTitle="投資類型" colTitle="自評" rows={["Online", "Traditional"]} cols={["Savvy", "Experienced", "Novice"]} counts={[[32, 220, 148], [8, 58, 134]]} initialRow={0} initialCol={1} focus="union" />
+
+見 [[ch2-charts#joint-frequency|聯合頻率分配]]。
+
+## 相對頻率的總和 {#q-relative-sum}
+
+In a frequency distribution, the sum of relative frequencies is:
+
+<Choice options={["Depends on the data", "1", "0", "100"]} answer="B" />
+
+### 詳解 {#q-relative-sum-solution .fold}
+
+**答案：B. 1**
+
+每組相對頻率 = 組頻率 ÷ 總數，全部加起來就是 總數 ÷ 總數 = 1（若用百分比表示則是 100%）。
+
+## 中位數的定義 {#q-median-def}
+
+The median is:
+
+<Choice options={["The most frequently occurring value", "The average of all values", "The difference between the highest and lowest values", "The middle value when data is ordered"]} answer="D" />
+
+### 詳解 {#q-median-def-solution .fold}
+
+**答案：D**
+
+中位數是資料**排序後**位於正中間的值。A 是眾數，B 是平均數，C 是全距。
+
+## 最受極端值影響的測度 {#q-outlier-effect}
+
+Which measure is most affected by extreme values (outliers)?
+
+<Choice options={["Mode", "None of the above", "Mean", "Median"]} answer="C" />
+
+### 詳解 {#q-outlier-effect-solution .fold}
+
+**答案：C. Mean（平均數）**
+
+平均數用到每一筆資料的**數值**，一個極端值就能把它拉走；中位數只看位置，眾數只看次數，都不太受影響。見 [[ch3-descriptive#center-summary|三種中心測度的比較]]。
+
+## 表示分散程度的量 {#q-spread}
+
+Which measure indicates the spread of data?
+
+<Choice options={["Mean", "Standard deviation", "Mode", "Median"]} answer="B" />
+
+### 詳解 {#q-spread-solution .fold}
+
+**答案：B. Standard deviation（標準差）**
+
+標準差描述資料離平均數有多遠，是變化測度；其餘三個都是中心測度。
+
+## 盒鬚圖提供的資訊 {#q-boxplot-info}
+
+A boxplot provides information about:
+
+<Choice options={["Frequency distribution", "Central tendency and variability", "Correlation between variables", "Time trends"]} answer="B" />
+
+### 詳解 {#q-boxplot-info-solution .fold}
+
+**答案：B**
+
+盒鬚圖畫出最小值、$Q_1$、中位數、$Q_3$、最大值：中位數表示中心，盒子長度（IQR）和鬚的長度表示分散程度，還能看出離群值與偏態。見 [[ch3-descriptive#boxplot|盒鬚圖]]。
+
+## 圓餅圖最適合的情境 {#q-pie-use}
+
+A pie chart is most effective when:
+
+<Choice options={["Showing parts of a whole", "Displaying frequency distributions", "Analyzing relationships between variables", "Comparing time series data"]} answer="A" />
+
+### 詳解 {#q-pie-use-solution .fold}
+
+**答案：A**
+
+圓餅圖整個圓代表 100%，每一塊是一個類別所佔的比例，用來呈現「部分佔整體」。見 [[ch2-charts#pie-chart|圓餅圖]]。
+
+## 類別變數的分配用什麼圖 {#q-categorical-chart}
+
+Which chart is most appropriate for displaying the distribution of a categorical variable?
+
+<Choice options={["Scatter plot", "Bar chart", "Line graph", "Histogram"]} answer="B" />
+
+### 詳解 {#q-categorical-chart-solution .fold}
+
+**答案：B. Bar chart（直條圖）**
+
+類別資料用直條圖：每個類別一條，長度代表次數，條與條之間分開。直方圖則用在數量資料，各組相連。見 [[ch2-charts#bar-vs-histogram|直條圖與直方圖的差別]]。
+
+## 房貸餘額的群組頻率分配 {#q-mortgage}
+
+（課本 2-14）2008 年美國房市泡沫破裂，以下是 100 筆遭法拍住宅在法拍時的房貸餘額（美元）：
+
+| | | | | |
+|---|---|---|---|---|
+| 172,229 | 211,021 | 159,205 | 247,697 | 247,469 |
+| 176,736 | 240,815 | 195,056 | 315,097 | 257,150 |
+| 129,779 | 207,451 | 165,225 | 178,970 | 319,101 |
+| 87,429 | 219,808 | 242,761 | 277,389 | 213,803 |
+| 153,468 | 205,696 | 210,447 | 179,029 | 241,331 |
+| 117,808 | 188,909 | 376,644 | 185,523 | 168,145 |
+| 158,094 | 135,461 | 131,457 | 263,232 | 256,262 |
+| 240,034 | 289,973 | 302,341 | 178,684 | 226,998 |
+| 176,440 | 268,106 | 181,507 | 118,752 | 251,009 |
+| 196,457 | 195,249 | 195,986 | 201,680 | 233,182 |
+| 271,552 | 123,262 | 212,411 | 246,462 | 177,673 |
+| 103,699 | 252,375 | 192,335 | 265,992 | 232,247 |
+| 320,004 | 213,020 | 192,546 | 295,660 | 211,876 |
+| 265,787 | 207,443 | 203,043 | 133,014 | 289,645 |
+| 251,560 | 302,054 | 185,381 | 284,345 | 184,869 |
+| 237,485 | 282,506 | 278,783 | 335,920 | 199,630 |
+| 248,272 | 232,234 | 188,833 | 168,905 | 357,612 |
+| 241,894 | 186,956 | 114,601 | 301,728 | 251,865 |
+| 207,040 | 221,614 | 318,154 | 156,611 | 219,730 |
+| 201,473 | 174,840 | 196,622 | 263,686 | 159,029 |
+
+- a. 依 $2^k\ge n$ 準則，至少要分幾組？
+- b. 組距無條件進位到 1,000 美元，組距是多少？
+- c. 完成群組頻率分配表（相對頻率）。
+- d. 畫出頻率直方圖並解讀。
+
+### 詳解 {#q-mortgage-solution .fold}
+
+**a.** $n=100$，找最小的 $k$ 使 $2^k\ge100$：$2^6=64$ 不夠，$2^7=128\ge100$，所以 $k=7$。
+
+**b.** 最大值 376,644，最小值 87,429：
+
+$$
+W=\frac{376{,}644-87{,}429}{7}=\frac{289{,}215}{7}\approx41{,}316\ \Rightarrow\ 42{,}000
+$$
+
+**c.** 從 80,000 開始、組距 42,000 分組。7 組只到 374,000，涵蓋不到最大值 376,644，所以要第 8 組。相對頻率 = 組頻率 ÷ 100：
+
+| 房貸餘額（美元） | 頻率 | 相對頻率 |
+|---|---|---|
+| 80,000 – under 122,000 | 5 | **0.05** |
+| 122,000 – under 164,000 | **10** | 0.10 |
+| 164,000 – under 206,000 | 30 | **0.30** |
+| 206,000 – under 248,000 | 25 | 0.25 |
+| 248,000 – under 290,000 | **19** | 0.19 |
+| 290,000 – under 332,000 | 8 | 0.08 |
+| 332,000 – under 374,000 | 2 | **0.02** |
+| 374,000 – under 416,000 | 1 | 0.01 |
+| 合計 | **100** | **1.00** |
+
+**d.** 最高的一組是 164,000–206,000（30 筆），大部分房貸落在 164,000 到 290,000 之間；右邊有一條拖到 41 萬的長尾，分配略為右偏。
+
+<HistogramBuilder title="100 筆法拍住宅的房貸餘額（美元）" data={[172229, 211021, 159205, 247697, 247469, 176736, 240815, 195056, 315097, 257150, 129779, 207451, 165225, 178970, 319101, 87429, 219808, 242761, 277389, 213803, 153468, 205696, 210447, 179029, 241331, 117808, 188909, 376644, 185523, 168145, 158094, 135461, 131457, 263232, 256262, 240034, 289973, 302341, 178684, 226998, 176440, 268106, 181507, 118752, 251009, 196457, 195249, 195986, 201680, 233182, 271552, 123262, 212411, 246462, 177673, 103699, 252375, 192335, 265992, 232247, 320004, 213020, 192546, 295660, 211876, 265787, 207443, 203043, 133014, 289645, 251560, 302054, 185381, 284345, 184869, 237485, 282506, 278783, 335920, 199630, 248272, 232234, 188833, 168905, 357612, 241894, 186956, 114601, 301728, 251865, 207040, 221614, 318154, 156611, 219730, 201473, 174840, 196622, 263686, 159029]} start={80000} widths={[42000, 50000]} />
+
+見 [[ch2-charts#grouped-steps|群組頻率分配的步驟]]。
+
+## 60 筆資料的累加頻率分配 {#q-cumulative}
+
+（課本 2-9）使用習題 2-8 的 60 筆資料：
+
+| | | | | | |
+|---|---|---|---|---|---|
+| 6 | 10 | 6 | 4 | 9 | 5 |
+| 5 | 5 | 5 | 7 | 6 | 2 |
+| 5 | 5 | 5 | 4 | 5 | 7 |
+| 6 | 7 | 8 | 6 | 8 | 4 |
+| 7 | 5 | 5 | 5 | 5 | 7 |
+| 8 | 7 | 6 | 7 | 5 | 4 |
+| 6 | 4 | 4 | 7 | 4 | 6 |
+| 6 | 7 | 8 | 6 | 7 | 6 |
+| 7 | 8 | 5 | 6 | 5 | 7 |
+| 3 | 6 | 4 | 7 | 4 | 4 |
+
+- a. 用 $2^k\ge n$ 決定組數 $k$；求最大值、最小值、初始組距（小數第三位）與取整後的組距。畫肩形圖時，橫軸是各組的哪一個值（組中點／上組界／下組界）？縱軸是相對頻率還是累加頻率？
+- b. 完成累加頻率分配（小數第四位）。題目給定的各組頻率是 1, 11, 27, 16, 2, 3。
+- c. 畫相對頻率直方圖。
+- d. 畫肩形圖。
+
+### 詳解 {#q-cumulative-solution .fold}
+
+**a.** $n=60$：$2^5=32$ 不夠，$2^6=64\ge60$，所以 $k=6$。最大值 10，最小值 2：
+
+$$
+W=\frac{10-2}{6}=1.333\ \Rightarrow\ 2
+$$
+
+肩形圖的橫軸用各組的**上組界**（upper class boundary），縱軸用**累加頻率**（cumulative frequency）：每個點表示「小於這個上組界的資料有多少」。
+
+**b.** 相對頻率 = 頻率 ÷ 60；累加頻率逐組相加；累加相對頻率 = 累加頻率 ÷ 60。
+
+| 組別 | 頻率 | 相對頻率 | 累加頻率 | 累加相對頻率 |
+|---|---|---|---|---|
+| 1 – under 3 | 1 | 0.0167 | 1 | 0.0167 |
+| 3 – under 5 | 11 | 0.1833 | 12 | 0.2000 |
+| 5 – under 7 | 27 | 0.4500 | 39 | 0.6500 |
+| 7 – under 9 | 16 | 0.2667 | 55 | 0.9167 |
+| 9 – under 11 | 2 | 0.0333 | 57 | 0.9500 |
+| 11 – under 13 | 3 | 0.0500 | 60 | 1.0000 |
+| 合計 | 60 | 1.0000 | — | — |
+
+注意：直接數上面 60 筆資料，各組頻率是 1, 11, 28, 18, 2, 0（資料裡沒有 11 以上的值），和題目給的頻率不同。作答時以題目表格給的頻率為準。
+
+**c.** 相對頻率直方圖：橫軸是六組，各組相連；高度是相對頻率，最高的是 5–7 這組（0.45）。
+
+**d.** 肩形圖：在上組界 3, 5, 7, 9, 11, 13 畫出累加頻率 1, 12, 39, 55, 57, 60（或累加相對頻率），從下組界 1 的 0 開始連線，曲線一路上升到 60。
+
+見 [[ch2-charts#relative-cumulative|相對頻率與累加相對頻率]]、[[ch2-charts#ogive|肩形圖]]。
+
+## 累加頻率的圖 {#q-ogive}
+
+Which of the following is a graphical representation of cumulative frequencies?
+
+<Choice options={["Ogive", "Pie chart", "Histogram", "Scatter plot"]} answer="A" />
+
+### 詳解 {#q-ogive-solution .fold}
+
+**答案：A. Ogive（肩形圖）**
+
+肩形圖把累加頻率（或累加相對頻率）畫在各組上組界，連成一路上升的折線。見 [[ch2-charts#ogive|肩形圖]]。

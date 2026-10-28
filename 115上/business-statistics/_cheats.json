@@ -2,6 +2,8 @@
   "cards": [
     { "id": "c_a09e", "ref": "ch4-probability.mdx#symbol-table", "added": "2026-10-27" },
     { "id": "c_81cb", "ref": "ch4-probability.mdx#rules-overview", "added": "2026-10-27" },
-    { "id": "c_5afb", "ref": "ch4-probability.mdx#screening-metrics", "added": "2026-10-28" }
+    { "id": "c_5191", "ref": "ch5-discrete.mdx#glossary", "added": "2026-10-28" },
+    { "id": "c_dbb9", "ref": "ch2-charts.mdx#ch2-map", "added": "2026-10-28" },
+    { "id": "c_8d50", "ref": "ch5-discrete.mdx#rv-variance", "added": "2026-10-28" }
   ]
 }

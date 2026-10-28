@@ -47,16 +47,16 @@ export default function BayesUpdate({ title, evidence, hypotheses, base, target 
     >
       <div style={panel}>
         <div style={{ display: "grid", gap: "4px" }}>
-          {two && <Slider label={`P(${hs[0].label})`} value={hs[0].prior} min={0.001} max={0.999} step={0.001} onChange={setPrior} />}
+          {two && <Slider label={`先驗 P(${hs[0].label})`} value={hs[0].prior} min={0.001} max={0.999} step={0.001} onChange={setPrior} />}
           {hs.map((h, i) => (
-            <Slider key={h.label} label={`P(B|${h.label})`} value={h.likelihood} min={0} max={1} step={0.005} onChange={(v) => set(i, { likelihood: v })} />
+            <Slider key={h.label} label={`P(${evidence}|${h.label})`} value={h.likelihood} min={0} max={1} step={0.005} onChange={(v) => set(i, { likelihood: v })} />
           ))}
         </div>
         <div style={{ overflowX: "auto", marginTop: "12px" }}>
           <table style={{ borderCollapse: "collapse", fontSize: "var(--fs-sm)", fontVariantNumeric: "tabular-nums", margin: 0 }}>
             <thead>
               <tr>
-                {["事件", "先驗 P(A)", `條件 P(B|A)`, "聯合 P(A∩B)", "事後 P(A|B)", `每 ${base}`].map((h) => (
+                {["事件 A", "先驗 P(A)", "條件 P(B|A)", "聯合 P(A∩B)", "事後 P(A|B)", `每 ${base}`].map((h) => (
                   <th key={h} style={{ ...cell, color: "var(--muted)", fontWeight: "normal" }}>
                     {h}
                   </th>
@@ -94,7 +94,7 @@ export default function BayesUpdate({ title, evidence, hypotheses, base, target 
           {bar(post, "事後")}
         </div>
         <div style={formula}>
-          {`P(${hs[target].label}|${evidence}) = P(${hs[target].label}∩B) / P(B) = ${fmt(joint[target], 5)} / ${fmt(pB, 5)} = ${fmt(post[target], 4)}（${fmt(post[target] * 100, 2)}%）`}
+          {`事後 P(${hs[target].label}|${evidence}) = 聯合 P(${hs[target].label}∩${evidence}) / P(${evidence}) =${fmt(joint[target], 5)} / ${fmt(pB, 5)} = ${fmt(post[target], 4)}（${fmt(post[target] * 100, 2)}%）`}
           {`\n人數版：${evidence}的 ${fmt(base * pB, 2)} 個中，真的是「${hs[target].label}」的有 ${fmt(base * joint[target], 2)} 個`}
         </div>
         <p style={{ ...muted, margin: "8px 0 0" }}>

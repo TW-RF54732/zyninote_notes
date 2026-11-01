@@ -2,7 +2,7 @@
   "cards": [
     { "id": "c_a09e", "ref": "ch4-probability.mdx#symbol-table", "added": "2026-10-27" },
     { "id": "c_81cb", "ref": "ch4-probability.mdx#rules-overview", "added": "2026-10-27" },
-    { "id": "c_dbb9", "ref": "ch2-charts.mdx#ch2-map", "added": "2026-10-28" },
-    { "id": "c_56da", "ref": "ch5-discrete.mdx#symbol-table", "added": "2026-10-29" }
+    { "id": "c_a12b", "ref": "ch5-discrete.mdx#glossary", "added": "2026-10-29" },
+    { "id": "c_6435", "ref": "ch5-discrete.mdx#symbol-table", "added": "2026-10-30" }
   ]
 }

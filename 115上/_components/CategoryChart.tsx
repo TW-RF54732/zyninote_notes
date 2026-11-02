@@ -3,7 +3,7 @@ import { Interactive } from "zyninote";
 import { Bars } from "./chart-ui.tsx";
 import { Chip, fmt, formula, muted, panel, row } from "./prob-ui.tsx";
 
-type Props = { title: string; items: { label: string; count: number }[] };
+type Props = { title: string; items: { label: string; count: number }[]; /** Show only one chart type, without the switch. */ only?: "bar" | "pie" };
 
 function slice(start: number, end: number, r = 70) {
   const pt = (t: number) => [100 + r * Math.sin(2 * Math.PI * t), 100 - r * Math.cos(2 * Math.PI * t)].map((v) => v.toFixed(2)).join(" ");
@@ -11,8 +11,8 @@ function slice(start: number, end: number, r = 70) {
 }
 
 /** The same categorical data as a bar chart (compare counts) and a pie chart (compare shares). */
-export default function CategoryChart({ title, items }: Props) {
-  const [kind, setKind] = useState<"bar" | "pie">("bar");
+export default function CategoryChart({ title, items, only }: Props) {
+  const [kind, setKind] = useState<"bar" | "pie">(only ?? "bar");
   const [pickedIndex, setPickedIndex] = useState(0);
   const total = items.reduce((s, x) => s + x.count, 0);
   const pct = (c: number) => `${fmt((c / total) * 100, 2)}%`;
@@ -24,6 +24,7 @@ export default function CategoryChart({ title, items }: Props) {
       description={`類別資料的直條圖與圓餅圖：${title}，共 ${total}。${items.map((x) => `${x.label} ${x.count}（${pct(x.count)}）`).join("、")}。直條圖比較各類別的次數，長條之間留空隙；圓餅圖比較各類別占全部的比例，每塊餅 = 該類別次數 / 總數 × 360°。`}
     >
       <div style={panel}>
+        {!only && (
         <div style={row}>
           <Chip active={kind === "bar"} onClick={() => setKind("bar")}>
             直條圖
@@ -32,6 +33,7 @@ export default function CategoryChart({ title, items }: Props) {
             圓餅圖
           </Chip>
         </div>
+        )}
         {kind === "bar" ? (
           <Bars
             values={items.map((x) => x.count)}

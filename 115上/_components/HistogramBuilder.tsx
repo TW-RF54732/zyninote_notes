@@ -11,12 +11,14 @@ type Props = {
   start: number;
   /** Class widths the reader can switch between; the first is the worked example's. */
   widths: number[];
+  /** "ogive": show only the ogive (points at upper class boundaries joined by lines). */
+  view?: "histogram" | "ogive";
 };
 
 const cell: CSSProperties = { padding: "4px 10px", borderBottom: "1px solid var(--line)", textAlign: "right", whiteSpace: "nowrap" };
 
 /** Grouped frequency table → histogram / ogive, rebuilt live for a chosen class width. */
-export default function HistogramBuilder({ title, data, start, widths }: Props) {
+export default function HistogramBuilder({ title, data, start, widths, view = "histogram" }: Props) {
   const [w, setW] = useState(widths[0]);
   const [ogive, setOgive] = useState(false);
   const n = data.length;
@@ -48,6 +50,8 @@ export default function HistogramBuilder({ title, data, start, widths }: Props) 
               {x}
             </Chip>
           ))}
+          {view === "histogram" && (
+            <>
           <span style={{ width: "8px" }} />
           <Chip active={!ogive} onClick={() => setOgive(false)}>
             直方圖
@@ -55,17 +59,48 @@ export default function HistogramBuilder({ title, data, start, widths }: Props) 
           <Chip active={ogive} onClick={() => setOgive(true)}>
             加上肩形圖
           </Chip>
+            </>
+          )}
         </div>
-        <Bars
-          values={freq}
-          labels={classes.map(String)}
-          touching
-          showValues
-          format={(v) => String(v)}
-          line={ogive ? cum : undefined}
-          highlight={freq.map((_, i) => i === top)}
-          ariaLabel={`組距 ${w} 的直方圖`}
-        />
+        {view === "ogive" ? (
+          <svg viewBox="0 0 400 220" role="img" aria-label={`組距 ${w} 的肩形圖`} style={{ width: "100%", maxWidth: "520px", display: "block", color: "var(--text)" }}>
+            {(() => {
+              const X = (i: number) => 40 + (330 * i) / k;
+              const Y = (v: number) => 180 - 150 * v;
+              const pts = [0, ...cum].map((v, i) => [X(i), Y(v)]);
+              return (
+                <g fill="none" stroke="currentColor">
+                  {[0, 0.5, 1].map((v) => (
+                    <g key={v}>
+                      <line x1={40} x2={370} y1={Y(v)} y2={Y(v)} strokeOpacity={0.15} />
+                      <text x={34} y={Y(v) + 3} textAnchor="end" fontSize="9" fill="currentColor" stroke="none">{v}</text>
+                    </g>
+                  ))}
+                  <polyline points={pts.map((q) => q.join(",")).join(" ")} strokeWidth={2} />
+                  {pts.map((q, i) => (
+                    <g key={i}>
+                      <circle cx={q[0]} cy={q[1]} r={3.5} fill="currentColor" />
+                      <text x={q[0]} y={198} textAnchor="middle" fontSize="9" fill="currentColor" stroke="none">{start + i * w}</text>
+                      {i > 0 && <text x={q[0]} y={q[1] - 7} textAnchor="middle" fontSize="8" fill="currentColor" stroke="none">{fmt(cum[i - 1], 2)}</text>}
+                    </g>
+                  ))}
+                  <text x={205} y={214} textAnchor="middle" fontSize="9" fill="currentColor" stroke="none">上組界</text>
+                </g>
+              );
+            })()}
+          </svg>
+        ) : (
+          <Bars
+            values={freq}
+            labels={classes.map(String)}
+            touching
+            showValues
+            format={(v) => String(v)}
+            line={ogive ? cum : undefined}
+            highlight={freq.map((_, i) => i === top)}
+            ariaLabel={`組距 ${w} 的直方圖`}
+          />
+        )}
         <div style={{ overflowX: "auto" }}>
           <table style={{ borderCollapse: "collapse", fontSize: "var(--fs-sm)", fontVariantNumeric: "tabular-nums", margin: 0 }}>
             <thead>

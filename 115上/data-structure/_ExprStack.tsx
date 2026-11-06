@@ -52,7 +52,7 @@ function toPostfix(expr: string): Step[] {
 
 const VALS: Record<string, number> = { a: 1, b: 4, c: 3, d: 1, e: 2, f: 5 };
 
-function evalPostfix(expr: string): Step[] {
+function evalPostfix(expr: string, vals: Record<string, number> = VALS): Step[] {
   const steps: Step[] = [];
   const st: number[] = [];
   for (const x of expr) {
@@ -63,8 +63,8 @@ function evalPostfix(expr: string): Step[] {
       st.push(v);
       steps.push({ token: x, stack: st.map(String), out: "", why: `運算子 ${x}：pop 兩次，先出來的 ${right} 是「右」運算元、後出來的 ${left} 是「左」，算 ${left} ${x} ${right} = ${v}，結果 push 回去。` });
     } else {
-      st.push(VALS[x]);
-      steps.push({ token: x, stack: st.map(String), out: "", why: `運算元 ${x} = ${VALS[x]}：push。` });
+      st.push(vals[x]);
+      steps.push({ token: x, stack: st.map(String), out: "", why: `運算元 ${x} = ${vals[x]}：push。` });
     }
   }
   steps.push({ token: "結束", stack: st.map(String), out: "", why: `讀完了，堆疊裡剩下的 ${st[0]} 就是答案。` });
@@ -74,16 +74,38 @@ function evalPostfix(expr: string): Step[] {
 const INFIX = ["a+b/(c-d)*e-f", "a+b*c-d", "(a+b)*(c-d)", "a*(b+c)/d"];
 const POSTFIX = ["abcd-/e*+", "abc*+d-", "ab+cd-*"];
 
-/** Step through infix→postfix conversion, or postfix evaluation, with the stack drawn live. */
-export default function ExprStack({ mode = "infix" }: { mode?: "infix" | "eval" }) {
-  const presets = mode === "infix" ? INFIX : POSTFIX;
+/** One worked case: an expression, plus variable values when evaluating. */
+export type ExprCase = { expr: string; vals?: Record<string, number> };
+
+const showVals = (v: Record<string, number>) => Object.entries(v).map(([k, n]) => `${k}=${n}`).join("、");
+
+/** Description built from the cases actually shown, so search / cheat cards see the exercise's own answers. */
+function describe(mode: "infix" | "eval", list: ExprCase[]): string {
+  if (mode === "infix") {
+    return "中置式轉後置式的堆疊法逐步示範。由左到右讀：運算元直接輸出；左括號 push；右括號一直 pop 輸出到左括號為止（括號不輸出）；運算子先把堆疊頂端優先順序大於或等於自己的運算子 pop 輸出，再 push 自己；讀完把堆疊剩下的全部 pop。優先順序 ^ > * / > + − > (。"
+      + list.map((c) => { const st = toPostfix(c.expr); return `${c.expr} 轉成 ${st[st.length - 1].out}`; }).join("；") + "。";
+  }
+  return "後置式求值的堆疊法逐步示範。由左到右讀：運算元 push；運算子 pop 兩次，先彈出的是右運算元、後彈出的是左運算元，計算後把結果 push；讀完時堆疊剩下的值就是答案。"
+    + list.map((c) => {
+      const st = evalPostfix(c.expr, c.vals ?? VALS);
+      const ops = st.filter((x) => isOp(x.token)).map((x) => x.why.match(/算 (.+?)，/)?.[1]).filter(Boolean).join("、");
+      return `${c.expr}（${showVals(c.vals ?? VALS)}）：${ops}，答案 ${st[st.length - 1].stack[0]}`;
+    }).join("；") + "。";
+}
+
+/** Step through infix→postfix conversion, or postfix evaluation, with the stack drawn live.
+ *  `cases` replaces the built-in presets (e.g. an exercise's own expressions and values). */
+export default function ExprStack({ mode = "infix", cases }: { mode?: "infix" | "eval"; cases?: ExprCase[] }) {
+  const list: ExprCase[] = cases ?? (mode === "infix" ? INFIX : POSTFIX).map((expr) => ({ expr }));
+  const presets = list.map((c) => c.expr);
   const [expr, setExpr] = useState(presets[0]);
   const [step, setStep] = useState(0);
-  const steps = useMemo(() => (mode === "infix" ? toPostfix(expr) : evalPostfix(expr)), [expr, mode]);
+  const vals = list.find((c) => c.expr === expr)?.vals ?? VALS;
+  const steps = useMemo(() => (mode === "infix" ? toPostfix(expr) : evalPostfix(expr, vals)), [expr, mode, vals]);
   const s = steps[Math.min(step, steps.length - 1)];
   const readIdx = s.token === "結束" ? expr.length : step;
 
-  const desc = mode === "infix"
+  const desc = cases ? describe(mode, cases) : mode === "infix"
     ? "中置式轉後置式的堆疊法逐步示範。由左到右讀：運算元直接輸出；左括號 push；右括號一直 pop 輸出到左括號為止（括號不輸出）；運算子先把堆疊頂端優先順序大於或等於自己的運算子 pop 輸出，再 push 自己；讀完把堆疊剩下的全部 pop。優先順序 ^ > * / > + − > (。例：a+b/(c-d)*e-f 轉成 abcd-/e*+f-；a+b*c-d 轉成 abc*+d-；(a+b)*(c-d) 轉成 ab+cd-*；a*(b+c)/d 轉成 abc+*d/。"
     : "後置式求值的堆疊法逐步示範。由左到右讀：運算元 push；運算子 pop 兩次，先彈出的是右運算元、後彈出的是左運算元，計算後把結果 push；讀完時堆疊剩下的值就是答案。例：a=1、b=4、c=3、d=1、e=2，abcd-/e*+ 的過程為 3−1=2、4/2=2、2×2=4、1+4=5，答案 5。";
 
@@ -99,7 +121,7 @@ export default function ExprStack({ mode = "infix" }: { mode?: "infix" | "eval" 
         </div>
         {mode === "eval" && (
           <div style={{ ...muted, marginTop: "6px", fontFamily: "var(--mono)" }}>
-            a=1　b=4　c=3　d=1　e=2
+            {Object.entries(vals).filter(([k]) => expr.includes(k)).map(([k, n]) => `${k}=${n}`).join("　")}
           </div>
         )}
 

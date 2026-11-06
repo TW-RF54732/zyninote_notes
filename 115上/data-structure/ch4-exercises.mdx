@@ -5,6 +5,8 @@ order: 4.5
 tags: [習題]
 ---
 
+import ExprStack from "./_ExprStack.tsx";
+
 題目來源：[[_pdf/習題解答-ch04.pdf|習題解答 ch04]]。概念說明見 [[ch4-stack-queue#ch4-map|第 4 章 堆疊和佇列]]。
 
 ## 堆疊與佇列的基本操作 {#q-basic-ops}
@@ -134,6 +136,10 @@ tags: [習題]
 - 括號：`(a-(b*((c+d)^e)))`
 - 後置：**`abcd+e^*-`**
 
+**用堆疊再做一次**：下面可以選這五題，一步步看堆疊和輸出怎麼變，結果要跟括號法一樣。
+
+<ExprStack mode="infix" cases={[{ expr: "a+b/(c-d)*e" }, { expr: "a+b-c" }, { expr: "a/(b-c)*d" }, { expr: "a^b-c/d+e" }, { expr: "a-b*(c+d)^e" }]} />
+
 用堆疊一步步轉的方法見 [[ch4-stack-queue#infix-to-postfix|用堆疊轉後置式]]，括號法見 [[ch4-stack-queue#paren-method|括號法轉換]]。
 
 ## 後置式求值 {#q-postfix-eval}
@@ -152,7 +158,15 @@ tags: [習題]
 - 讀到運算子 → 拿出最上面兩個數。**先拿出來的是右邊**、後拿出來的是左邊，算「左 運算子 右」，答案放回堆疊。
 - 讀完時堆疊剩下的就是答案。
 
-下表「堆疊」欄左邊是底、右邊是頂。
+下表「堆疊」欄左邊是底、右邊是頂。也可以在這裡選題目，一步步看堆疊：
+
+<ExprStack mode="eval" cases={[
+  { expr: "abcd-/e*+", vals: { a: 1, b: 4, c: 3, d: 1, e: 2 } },
+  { expr: "ab+c-", vals: { a: 1, b: 2, c: 3 } },
+  { expr: "abc-/d*", vals: { a: 18, b: 3, c: 1, d: 9 } },
+  { expr: "ab^cd/-e+", vals: { a: 2, b: 3, c: 10, d: 5, e: 1 } },
+  { expr: "abcd+e^*-", vals: { a: 100, b: 4, c: 3, d: 2, e: 2 } },
+]} />
 
 **1. `abcd-/e*+`**（a=1, b=4, c=3, d=1, e=2）
 

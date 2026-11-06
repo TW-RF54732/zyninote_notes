@@ -5,6 +5,8 @@ order: 6.5
 tags: [習題]
 ---
 
+import { BTreeDeleteEx, BTreeInsertEx, BstTrace, ExprTreeEx, RebuildTree, ThreadedEx } from "./_TreeExercises.tsx";
+
 題目來源：[[_pdf/習題解答-ch06(更新).pdf|習題解答 ch06]]。概念說明見 [[ch6-tree#ch6-map|第 6 章 樹狀結構]]。
 
 ## 樹的術語 {#q-terms}
@@ -259,19 +261,19 @@ graph TD
 **第 1 輪：整棵樹**
 
 - 前序第一個是 **A** → 樹根。
-- 中序 `D B H E | A | F I C G` → 左子樹 {D, B, H, E}、右子樹 {F, I, C, G}。
+- 中序 `D B H E | A | F I C G` → 左子樹 \{D, B, H, E\}、右子樹 \{F, I, C, G\}。
 
-**第 2 輪：左子樹 {D, B, H, E}**
+**第 2 輪：左子樹 \{D, B, H, E\}**
 
 - 前序中這四個依序是 B D E H，第一個 **B** 是根。
-- 中序 `D | B | H E` → D 在 B 左邊，{H, E} 在 B 右邊。
-- {H, E}：前序順序 E H → **E** 是根；中序 H E → H 在 E 左邊。
+- 中序 `D | B | H E` → D 在 B 左邊，\{H, E\} 在 B 右邊。
+- \{H, E\}：前序順序 E H → **E** 是根；中序 H E → H 在 E 左邊。
 
-**第 3 輪：右子樹 {F, I, C, G}**
+**第 3 輪：右子樹 \{F, I, C, G\}**
 
 - 前序中依序是 C F I G，第一個 **C** 是根。
-- 中序 `F I | C | G` → {F, I} 在 C 左邊，G 在右邊。
-- {F, I}：前序 F I → **F** 是根；中序 F I → I 在 F 右邊。
+- 中序 `F I | C | G` → \{F, I\} 在 C 左邊，G 在右邊。
+- \{F, I\}：前序 F I → **F** 是根；中序 F I → I 在 F 右邊。
 
 ```mermaid
 graph TD
@@ -284,6 +286,10 @@ graph TD
   C -->|R| G
   F -->|R| I
 ```
+
+**逐步看**：每按一次處理一群節點，上面兩列標出這一輪的根和左右兩邊。
+
+<RebuildTree kind="pre" other="A B D E H C F I G" inorder="D B H E A F I C G" />
 
 **檢查**：對畫出來的樹再做一次前序和中序，要跟題目一樣。見 [[ch6-tree#rebuild-tree|由追蹤結果重建二元樹]]。
 
@@ -298,19 +304,19 @@ graph TD
 **第 1 輪：整棵樹**
 
 - 後序最後一個是 **A** → 樹根。
-- 中序 `D B E H | A | F C I G` → 左子樹 {D, B, E, H}、右子樹 {F, C, I, G}。
+- 中序 `D B E H | A | F C I G` → 左子樹 \{D, B, E, H\}、右子樹 \{F, C, I, G\}。
 
-**第 2 輪：左子樹 {D, B, E, H}**
+**第 2 輪：左子樹 \{D, B, E, H\}**
 
 - 後序中依序是 D H E B，最後一個 **B** 是根。
-- 中序 `D | B | E H` → D 在左，{E, H} 在右。
-- {E, H}：後序 H E → 最後的 **E** 是根；中序 E H → H 在 E 右邊。
+- 中序 `D | B | E H` → D 在左，\{E, H\} 在右。
+- \{E, H\}：後序 H E → 最後的 **E** 是根；中序 E H → H 在 E 右邊。
 
-**第 3 輪：右子樹 {F, C, I, G}**
+**第 3 輪：右子樹 \{F, C, I, G\}**
 
 - 後序中依序是 F I G C，最後一個 **C** 是根。
-- 中序 `F | C | I G` → F 在左，{I, G} 在右。
-- {I, G}：後序 I G → 最後的 **G** 是根；中序 I G → I 在 G 左邊。
+- 中序 `F | C | I G` → F 在左，\{I, G\} 在右。
+- \{I, G\}：後序 I G → 最後的 **G** 是根；中序 I G → I 在 G 左邊。
 
 ```mermaid
 graph TD
@@ -323,6 +329,10 @@ graph TD
   C -->|R| G
   G -->|L| I
 ```
+
+**逐步看**：
+
+<RebuildTree kind="post" other="D H E B F I G C A" inorder="D B E H A F C I G" />
 
 ## 運算式樹 {#q-expression-tree}
 
@@ -362,6 +372,10 @@ graph TD
   NEG --> E
 ```
 
+**逐步看**（由外往內拆）：
+
+<ExprTreeEx />
+
 見 [[ch6-tree#expression-tree|運算式樹]]。
 
 ## 引線二元樹 {#q-threaded}
@@ -386,7 +400,13 @@ graph TD
 | I | G 和 C 之間 | G | C |
 | E | 最後一個 | C | 開頭節點（沒有下一個） |
 
-開頭節點的左鏈結指向樹根 A，右鏈結指向自己。見 [[ch6-tree#threaded-binary-tree|引線二元樹]]。
+開頭節點的左鏈結指向樹根 A，右鏈結指向自己。
+
+**逐步看**：一次補一個節點的引線（虛線箭頭）。
+
+<ThreadedEx tree="A(B,C(D(F,G(H,I)),E))" />
+
+見 [[ch6-tree#threaded-binary-tree|引線二元樹]]。
 
 ## 追蹤的應用與引線樹優缺點 {#q-thread-pros-cons}
 
@@ -435,6 +455,10 @@ graph TD
   G -->|R| H[99]
 ```
 
+**逐步看**：每一步插入一個數字，淺色是比較過的節點。
+
+<BstTrace insert={[42, 9, 11, 71, 61, 78, 28, 99]} />
+
 中序：**9, 11, 28, 42, 61, 71, 78, 99**，剛好由小到大，可以拿來檢查樹有沒有畫錯。見 [[ch6-tree#bst|二元搜尋樹]]。
 
 ## 二元搜尋樹的刪除 {#q-bst-delete}
@@ -465,6 +489,12 @@ graph TD
 1. 找**右子樹裡最小的**：進右子樹 72，一路往左走到底 → 72 → 47 → **33**。
 2. 33 比左子樹全部大（大於 20）、比右子樹其他全部小，放在樹根剛好。
 3. 用 33 取代 35，再把原本位置的 33 刪掉（33 是樹葉，直接刪）。
+
+**注意**：題目的圖其實不是合法的二元搜尋樹：33 比 35 小，卻放在 35 的右子樹裡（課本原圖如此）。這裡照題目的圖操作，考試時照這個步驟寫即可。
+
+**逐步看**：
+
+<BstTrace start="35(12(,20),72(47(33,55),110(,120)))" remove={[12, 35]} />
 
 ```mermaid
 graph TD
@@ -512,7 +542,12 @@ graph TD
   Z2 --> e["270"]
 ```
 
-（[24]、[55, 92] 底下的樹葉不變，圖中省略。）見 [[ch6-tree#b-tree-insert|B 樹的插入]]。
+（[24]、[55, 92] 底下的樹葉不變，圖中省略。）
+
+**逐步看**（虛線框 = 鍵值太多或太少）：
+
+<BTreeInsertEx />
+見 [[ch6-tree#b-tree-insert|B 樹的插入]]。
 
 ## B 樹刪除 {#q-btree-delete}
 
@@ -541,5 +576,7 @@ graph TD
   P --> b["72"]
   P --> c["96"]
 ```
+
+<BTreeDeleteEx />
 
 **檢查**：55 小於 56、72 介於 56 和 92 之間、96 大於 92，左小右大仍然成立。見 [[ch6-tree#b-tree-delete|B 樹的刪除]]。

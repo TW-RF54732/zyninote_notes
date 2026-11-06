@@ -5,6 +5,7 @@
     { "id": "c_a77a", "ref": "ch3-linked-list.mdx#glossary", "added": "2026-11-06" },
     { "id": "c_ece8", "ref": "ch4-stack-queue.mdx#glossary", "added": "2026-11-06" },
     { "id": "c_b68b", "ref": "ch5-recursion.mdx#glossary", "added": "2026-11-06" },
-    { "id": "c_ae9e", "ref": "ch6-tree.mdx#glossary", "added": "2026-11-06" }
+    { "id": "c_ae9e", "ref": "ch6-tree.mdx#glossary", "added": "2026-11-06" },
+    { "id": "c_77b1", "ref": "ch2-array.mdx#symbol-table", "added": "2026-11-06" }
   ]
 }

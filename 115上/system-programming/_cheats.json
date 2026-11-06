@@ -1,0 +1,9 @@
+{
+  "cards": [
+    { "id": "c_7670", "ref": "ch2-cpu0-arch.mdx#instruction-categories", "added": "2026-11-04" },
+    { "id": "c_c268", "ref": "ch2-cpu0-arch.mdx#load-store-table", "added": "2026-11-04" },
+    { "id": "c_5ce9", "ref": "ch2-cpu0-arch.mdx#arithmetic-table", "added": "2026-11-04" },
+    { "id": "c_6d27", "ref": "ch2-cpu0-arch.mdx#jump-table", "added": "2026-11-04" },
+    { "id": "c_9705", "ref": "ch2-cpu0-arch.mdx#stack-table", "added": "2026-11-04" }
+  ]
+}

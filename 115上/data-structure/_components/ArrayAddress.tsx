@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { Interactive } from "zyninote";
-import { Cell, Chip, caption, cells, formula, muted, panel, row, tint } from "./_ds-ui.tsx";
+import { Cell, Chip, caption, cells, formula, muted, panel, row, tint } from "./ds-ui.tsx";
 
 const M = 3; // rows
 const N = 4; // cols

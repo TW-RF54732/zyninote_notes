@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Interactive } from "zyninote";
-import { Chip, StepBar, caption, formula, panel, row } from "./_ds-ui.tsx";
-import { ListDraw, type LEdge, type LNode, type LPtr } from "./_ListDraw.tsx";
+import { Chip, StepBar, caption, formula, panel, row } from "./ds-ui.tsx";
+import { ListDraw, type LEdge, type LNode, type LPtr } from "./ListDraw.tsx";
 
 type Frame = { nodes: LNode[]; edges: LEdge[]; ptrs: LPtr[]; code: string; msg: string };
 

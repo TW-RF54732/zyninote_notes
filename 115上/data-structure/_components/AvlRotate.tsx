@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Interactive } from "zyninote";
-import { BinTree, Chip, caption, muted, panel, parseTree, row, type TNode } from "./_ds-ui.tsx";
+import { BinTree, Chip, caption, muted, panel, parseTree, row, type TNode } from "./ds-ui.tsx";
 
 type Case = { label: string; before: string; after: string; added: string; pivot: string; newRoot: string; explain: string; result: string };
 

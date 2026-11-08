@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Interactive } from "zyninote";
-import { Chip, StepBar, caption, muted, panel, row, tint } from "./_ds-ui.tsx";
+import { Chip, StepBar, caption, muted, panel, row, tint } from "./ds-ui.tsx";
 
 type Move = { disk: number; from: number; to: number; depth: number; phase: string };
 const PEG = ["a", "b", "c"];

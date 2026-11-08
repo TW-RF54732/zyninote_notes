@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Interactive } from "zyninote";
-import { BinTree, Chip, caption, formula, muted, panel, row, type TNode } from "./_ds-ui.tsx";
+import { BinTree, Chip, caption, formula, muted, panel, row, type TNode } from "./ds-ui.tsx";
 
 type B = { k: number; l: B | null; r: B | null } | null;
 

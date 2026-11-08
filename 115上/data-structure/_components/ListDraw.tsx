@@ -1,4 +1,4 @@
-import { tint, useSvgId } from "./_ds-ui.tsx";
+import { tint, useSvgId } from "./ds-ui.tsx";
 
 export type LNode = { id: string; label: string; x: number; y: number; hi?: boolean; ghost?: boolean };
 export type LEdge = { from: string; to: string | null; hi?: boolean; dashed?: boolean; back?: boolean };

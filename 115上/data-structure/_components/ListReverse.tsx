@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Interactive } from "zyninote";
-import { StepBar, caption, formula, muted, panel } from "./_ds-ui.tsx";
-import { ListDraw, type LPtr } from "./_ListDraw.tsx";
+import { StepBar, caption, formula, muted, panel } from "./ds-ui.tsx";
+import { ListDraw, type LPtr } from "./ListDraw.tsx";
 
 const VALS = ["33", "72", "48", "11"];
 type St = { link: Record<string, string | null>; head: string | null; mid: string | null; last: string | null; code: string; msg: string; hi?: string };

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Interactive } from "zyninote";
-import { BinTree, Chip, StepBar, caption, formula, muted, panel, parseTree, row, type TNode } from "./_ds-ui.tsx";
+import { BinTree, Chip, StepBar, caption, formula, muted, panel, parseTree, row, type TNode } from "./ds-ui.tsx";
 
 type Order = "pre" | "in" | "post";
 const ORDER_NAME: Record<Order, string> = { pre: "前序 D→L→R", in: "中序 L→D→R", post: "後序 L→R→D" };

@@ -1,6 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Interactive } from "zyninote";
-import { BinTree, Cell, StepBar, caption, cells, formula, muted, panel, parseTree, tint, useSvgId, type TNode } from "./_ds-ui.tsx";
+import { BinTree, Cell, StepBar, caption, cells, formula, muted, panel, parseTree, tint, useSvgId, type TNode } from "./ds-ui.tsx";
 
 /** Shared frame for the step-through exercise widgets. */
 function Stepper({ description, total, render }: {

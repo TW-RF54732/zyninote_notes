@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Interactive } from "zyninote";
-import { Chip, caption, formula, muted, panel, row, tint } from "./_ds-ui.tsx";
+import { Chip, caption, formula, muted, panel, row, tint } from "./ds-ui.tsx";
 
 const NAMES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

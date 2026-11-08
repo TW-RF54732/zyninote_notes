@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Interactive } from "zyninote";
-import { BinTree, Chip, caption, muted, panel, row, type TNode } from "./_ds-ui.tsx";
+import { BinTree, Chip, caption, muted, panel, row, type TNode } from "./ds-ui.tsx";
 
 function fibTree(n: number, path: string, count: Record<number, number>): TNode {
   count[n] = (count[n] ?? 0) + 1;

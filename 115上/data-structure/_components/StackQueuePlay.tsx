@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Interactive } from "zyninote";
-import { Cell, Chip, caption, cells, muted, panel, row } from "./_ds-ui.tsx";
+import { Cell, Chip, caption, cells, muted, panel, row } from "./ds-ui.tsx";
 
 const N = 6;
 const NAMES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

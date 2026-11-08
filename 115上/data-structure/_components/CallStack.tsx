@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Interactive } from "zyninote";
-import { Chip, StepBar, caption, muted, panel, row, tint } from "./_ds-ui.tsx";
+import { Chip, StepBar, caption, muted, panel, row, tint } from "./ds-ui.tsx";
 
 type Fn = "fact" | "pow";
 type Frame = { n: number; ret?: number };

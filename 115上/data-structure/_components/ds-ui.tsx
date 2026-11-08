@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { Chip, Slider, formula, muted, panel, row, tint, useSvgId } from "../_components/prob-ui.tsx";
+import { Chip, Slider, formula, muted, panel, row, tint, useSvgId } from "../../_components/prob-ui.tsx";
 
 /** Shared look for the data-structure widgets: monochrome, app tokens only. */
 export { Chip, Slider, formula, muted, panel, row, tint, useSvgId };

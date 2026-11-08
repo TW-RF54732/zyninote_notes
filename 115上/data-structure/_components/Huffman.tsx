@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Interactive } from "zyninote";
-import { BinTree, Chip, StepBar, caption, formula, muted, panel, row, type TNode } from "./_ds-ui.tsx";
+import { BinTree, Chip, StepBar, caption, formula, muted, panel, row, type TNode } from "./ds-ui.tsx";
 
 type H = { key: string; w: number; ch?: string; l?: H; r?: H };
 

@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { Interactive } from "zyninote";
-import { Chip, Slider, caption, formula, muted, panel, row, tint } from "./_ds-ui.tsx";
+import { Chip, Slider, caption, formula, muted, panel, row, tint } from "./ds-ui.tsx";
 
 const FUNCS: { name: string; f: (n: number) => number }[] = [
   { name: "log n", f: (n) => Math.log2(n) },

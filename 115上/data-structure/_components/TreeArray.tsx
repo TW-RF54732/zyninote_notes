@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Interactive } from "zyninote";
-import { BinTree, Cell, Chip, caption, cells, formula, muted, panel, parseTree, row, type TNode } from "./_ds-ui.tsx";
+import { BinTree, Cell, Chip, caption, cells, formula, muted, panel, parseTree, row, type TNode } from "./ds-ui.tsx";
 
 const PRESETS = {
   full: { label: "接近完滿的樹", spec: "A(B(D,E),C(F,))" },

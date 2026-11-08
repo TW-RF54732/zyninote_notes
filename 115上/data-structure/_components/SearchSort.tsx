@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Interactive } from "zyninote";
-import { Cell, Chip, StepBar, caption, cells, formula, muted, panel, row } from "./_ds-ui.tsx";
+import { Cell, Chip, StepBar, caption, cells, formula, muted, panel, row } from "./ds-ui.tsx";
 
 const D = [12, 25, 37, 48, 62, 75, 98, 120, 146];
 

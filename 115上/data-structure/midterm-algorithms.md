@@ -1,6 +1,6 @@
 ---
 title: 期中考 演算法程式複習
-summary: 把第 1–6 章出現的演算法集中起來，每個先列寫程式要用到的概念（變數意義、迴圈或遞迴、邊界條件、常見錯誤），再附可直接編譯執行的 C 程式（同時能用 C++ 編譯）：n! 與最大值、陣列位址與三角矩陣索引、循序與二元搜尋、氣泡排序、矩陣轉置加法乘法、稀疏矩陣三行式，單向串列的插入刪除反轉合併釋放、雙向與環狀串列、多項式相加，陣列與串列實作堆疊佇列、環狀佇列、多重堆疊、雙向佇列、優先佇列、中置轉後置與後置求值，遞迴的次方階乘費氏河內塔 GCD 排列，二元樹追蹤、陣列表示法、由前中序重建、引線二元樹、二元搜尋樹、AVL 旋轉、B 樹搜尋、互斥集合與霍夫曼編碼
+summary: 把第 1–6 章出現的演算法集中起來，每個先列寫程式要用到的概念（變數意義、迴圈或遞迴、邊界條件、常見錯誤），再附可直接編譯執行的 C 程式與 C++ 程式（兩版輸出相同，C++ 用 new/delete、參考、class 與 STL）：n! 與最大值、陣列位址與三角矩陣索引、循序與二元搜尋、氣泡排序、矩陣轉置加法乘法、稀疏矩陣三行式，單向串列的插入刪除反轉合併釋放、雙向與環狀串列、多項式相加，陣列與串列實作堆疊佇列、環狀佇列、多重堆疊、雙向佇列、優先佇列、中置轉後置與後置求值，遞迴的次方階乘費氏河內塔 GCD 排列，二元樹追蹤、陣列表示法、由前中序重建、引線二元樹、二元搜尋樹、AVL 旋轉、B 樹搜尋、互斥集合與霍夫曼編碼
 order: 7
 tags: []
 ---
@@ -11,15 +11,16 @@ tags: []
 
 - **想法**：一兩句話說它在做什麼。
 - **寫程式要注意**：要用到的變數、迴圈或遞迴的寫法、邊界條件、最常寫錯的地方。考試寫程式題時，先把這幾點想清楚再下筆。
-- **C 程式**（摺疊）：完整可編譯的程式，含 `main` 示範與預期輸出。寫法照課本（欄位名 `link`、`l_child`、`top = -1`…），而且**也能用 C++ 編譯**（`malloc` 都有轉型、沒有用 C++ 保留字當變數名）。
+- **C 程式**（摺疊）：完整可編譯的程式，含 `main` 示範與預期輸出。寫法照課本（欄位名 `link`、`l_child`、`top = -1`…），而且也能直接用 g++ 編譯。
+- **C++ 程式**（摺疊）：同一個演算法用 C++ 的習慣寫法：`new`／`delete`、`nullptr`、傳參考 `node *&`、`class` 包裝堆疊佇列、`std::vector`、`std::string`、`std::stack`。演算法步驟和 C 版一模一樣，**輸出也和 C 版逐字相同**（霍夫曼除外，見該區塊），可以兩邊對照看差在哪。註解裡也列出可以直接用的 STL 現成工具。
 
 每個區塊最後有連結回原章節，概念細節和互動圖在那裡。
 
-**自己跑程式**：`gcc 檔名.c -o 檔名` 或 `g++ 檔名.c -o 檔名`。Windows 終端機的中文輸出變成亂碼時，先執行 `chcp 65001` 再跑，或編譯時加 `-fexec-charset=big5`。
+**自己跑程式**：C 用 `gcc 檔名.c -o 檔名`，C++ 用 `g++ -std=c++17 檔名.cpp -o 檔名`。Windows 終端機的中文輸出變成亂碼時，先執行 `chcp 65001` 再跑，或編譯時加 `-fexec-charset=big5`。
 
 ## C 與 C++ 寫法對照 {#c-vs-cpp}
 
-課本用 C。如果考試或作業允許 C++，下列寫法可以互換，演算法本身完全一樣：
+課本用 C，每個演算法下面都另附 C++ 版。兩者的差別集中在這幾個地方，演算法本身完全一樣：
 
 | 要做的事 | C | C++ |
 |---|---|---|
@@ -30,8 +31,16 @@ tags: []
 | 輸出 | `printf("%d", x);` | `cout << x;` |
 | 交換 | 自己寫 `swap(int *a, int *b)` | `std::swap(a, b);` |
 | 現成堆疊／佇列 | 自己寫 | `std::stack`、`std::queue`、`std::priority_queue` |
+| 空指標 | `NULL` | `nullptr` |
+| 真假 | `int`（0／1） | `bool`（`false`／`true`） |
+| 陣列加長度 | `int d[]` 再另外傳 `n` | `std::vector<int>&`，用 `d.size()` |
+| 字串 | `char[]` 結尾補 `'\0'` | `std::string`，用 `+=`、`substr` |
+| 資料和操作綁在一起 | 全域變數 + 函數 | `class`（建構子初始化、解構子自動歸還節點） |
 
-**注意**：課本有的程式用 `new` 當變數名稱（例如新節點），這在 C 可以，在 C++ 是保留字會編譯失敗。本頁一律改用 `x` 或 `node_new`。
+**注意**：
+
+- 課本有的程式用 `new` 當變數名稱（例如新節點），這在 C 可以，在 C++ 是保留字會編譯失敗。本頁一律改用 `x`。
+- 本頁的 C++ 版不寫 `using namespace std;`，一律寫 `std::`。寫了 `using namespace std;` 之後，如果自己把全域陣列取名 `stack`、`queue`（C 版就是這樣取的），會和 `std::stack`、`std::queue` 撞名，編譯錯誤「reference to 'stack' is ambiguous」。習慣寫 `using namespace std;` 的話，變數名稱要避開這些字。
 
 ## 迴圈基本功（第 1 章） {#loops}
 
@@ -64,6 +73,24 @@ int main(void) {
     printf("5! = %ld\n", factorial_loop(5));    /* 5! = 120 */
     printf("0! = %ld\n", factorial_loop(0));    /* 0! = 1，迴圈一次都不跑 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-factorial-loop-cpp .fold}
+
+```cpp
+#include <iostream>
+
+long long factorial_loop(int n) {
+    long long product = 1;                     // 累乘從 1 開始
+    for (int m = 1; m <= n; m++)
+        product *= m;
+    return product;
+}
+
+int main() {
+    std::cout << "5! = " << factorial_loop(5) << "\n";   // 5! = 120
+    std::cout << "0! = " << factorial_loop(0) << "\n";   // 0! = 1
 }
 ```
 
@@ -103,6 +130,34 @@ int main(void) {
     printf("%d\n", max3(3, 9, 5));        /* 9 */
     printf("%d\n", max_n(d, 3));          /* -3 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-max-of-three-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int max3(int a, int b, int c) {
+    int mx = a;                                // 先假設 a 最大
+    if (b > mx) mx = b;
+    if (c > mx) mx = c;
+    return mx;
+}
+
+int max_n(const std::vector<int>& d) {         // vector 自己記得長度，不用另外傳 n
+    int mx = d[0];
+    for (int x : d)                            // range-for：依序取出每個元素
+        if (x > mx) mx = x;
+    return mx;
+}
+
+int main() {
+    std::vector<int> d = {-7, -3, -9};
+    std::cout << max3(3, 9, 5) << "\n";        // 9
+    std::cout << max_n(d) << "\n";             // -3
+    // 現成的：std::max({3, 9, 5})、*std::max_element(d.begin(), d.end())（<algorithm>）
 }
 ```
 
@@ -170,6 +225,46 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-address-cpp .fold}
+
+```cpp
+#include <iostream>
+
+long loc1(long alpha, int z, int f, int i) {
+    return alpha + long(i - f) * z;
+}
+
+long loc2_rm(long alpha, int z, int f1, int f2, int t2, int i, int j) {
+    int n = t2 - f2 + 1;                       // 每列幾個元素
+    return alpha + (long(i - f1) * n + (j - f2)) * z;
+}
+
+long loc2_cm(long alpha, int z, int f1, int t1, int f2, int i, int j) {
+    int m = t1 - f1 + 1;                       // 每行幾個元素
+    return alpha + (long(j - f2) * m + (i - f1)) * z;
+}
+
+long loc3_rm(long alpha, int z, int m, int n, int i, int j, int k) {
+    return alpha + (long(i) * m * n + long(j) * n + k) * z;
+}
+
+int main() {
+    int a[3][4];
+    bool ok = true;
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 4; j++) {
+            long real = reinterpret_cast<char*>(&a[i][j]) - reinterpret_cast<char*>(&a[0][0]);
+            if (real != loc2_rm(0, sizeof(int), 0, 0, 3, i, j)) ok = false;
+        }
+    std::cout << "RM 公式和 C 的位址一致：" << (ok ? "是" : "否") << "\n";   // 是
+
+    std::cout << loc1(100, 4, -3, 2) << "\n";                              // 120
+    std::cout << loc2_rm(0, 1, 1, 1, 4, 2, 3) << " "                       // 6
+              << loc2_cm(0, 1, 1, 3, 1, 2, 3) << "\n";                     // 7
+    std::cout << loc3_rm(0, 1, 3, 4, 1, 2, 3) << "\n";                     // 23
+}
+```
+
 ### 三角矩陣的壓縮存放 {#alg-triangular}
 
 **想法**：0 的那半不存，把有值的部分一列一列（或一行一行）塞進一維陣列，存取時用公式算出它在第幾格。
@@ -217,6 +312,40 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-triangular-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+const int N = 4;
+
+int lower_index(int i, int j) { return i * (i + 1) / 2 + j; }   // i >= j
+int upper_index(int i, int j) { return j * (j + 1) / 2 + i; }   // i <= j
+
+int lower_get(const std::vector<int>& packed, int i, int j) {
+    if (i < j) return 0;                       // 對角線以上都是 0
+    return packed[lower_index(i, j)];
+}
+
+int main() {
+    int m[N][N] = {{1, 0, 0, 0},
+                   {2, 3, 0, 0},
+                   {4, 5, 6, 0},
+                   {7, 8, 9, 10}};
+    std::vector<int> packed(N * (N + 1) / 2);  // 10 格
+
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j <= i; j++)
+            packed[lower_index(i, j)] = m[i][j];
+
+    std::cout << lower_get(packed, 2, 1) << " "      // 5
+              << lower_get(packed, 1, 3) << " "      // 0
+              << lower_index(3, 3) << "\n";          // 9
+    std::cout << upper_index(1, 3) << "\n";          // 7
+}
+```
+
 ### 循序搜尋 {#alg-sequential-search}
 
 **想法**：從第一筆開始一個一個比，找到就停。資料不用排序。
@@ -245,6 +374,25 @@ int main(void) {
     int d[] = {48, 12, 98, 37, 62};
     printf("%d %d\n", seq_search(d, 5, 37), seq_search(d, 5, 50));   /* 3 -1 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-sequential-search-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int seq_search(const std::vector<int>& d, int k) {
+    for (int i = 0; i < (int)d.size(); i++)
+        if (d[i] == k) return i;               // 找到就停
+    return -1;
+}
+
+int main() {
+    std::vector<int> d = {48, 12, 98, 37, 62};
+    std::cout << seq_search(d, 37) << " " << seq_search(d, 50) << "\n";   // 3 -1
+    // 現成的：std::find(d.begin(), d.end(), 37)（<algorithm>），找不到回傳 d.end()
 }
 ```
 
@@ -284,6 +432,34 @@ int main(void) {
     printf("找到位置 %d\n", binary_search(d, 9, 120));
     /* 比 3 次：mid=4(62) → mid=6(98) → mid=7(120)，找到位置 7 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-binary-search-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int bin_search(const std::vector<int>& d, int k) {
+    int low = 0, high = (int)d.size() - 1;
+    while (low <= high) {
+        int mid = (low + high) / 2;
+        std::cout << "low=" << low << " high=" << high
+                  << " mid=" << mid << " d[mid]=" << d[mid] << "\n";
+        if (d[mid] == k) return mid;
+        else if (d[mid] < k) low = mid + 1;    // 答案在右半
+        else                 high = mid - 1;   // 答案在左半
+    }
+    return -1;
+}
+
+int main() {
+    std::vector<int> d = {12, 25, 37, 48, 62, 75, 98, 120, 146};
+    int pos = bin_search(d, 120);              // 先算：不然「找到位置」會比追蹤先印
+    std::cout << "找到位置 " << pos << "\n";    // 比 3 次，找到位置 7
+    // 現成的：std::binary_search(d.begin(), d.end(), 120) 只回傳有沒有；
+    //         std::lower_bound 回傳位置（<algorithm>）
 }
 ```
 
@@ -331,6 +507,39 @@ int main(void) {
        3 1 5 8
        1 3 5 8 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-bubble-sort-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <utility>
+#include <vector>
+
+void print_array(const std::vector<int>& d) {
+    for (int x : d) std::cout << x << " ";
+    std::cout << "\n";
+}
+
+void bubble_sort(std::vector<int>& d) {        // & 傳參考：直接改呼叫端的 vector
+    int n = (int)d.size();
+    for (int i = n - 1; i > 0; i--) {
+        bool swapped = false;
+        for (int j = 0; j < i; j++)
+            if (d[j] > d[j + 1]) {
+                std::swap(d[j], d[j + 1]);
+                swapped = true;
+            }
+        print_array(d);
+        if (!swapped) break;                   // 沒換過 → 已排好
+    }
+}
+
+int main() {
+    std::vector<int> d = {8, 3, 5, 1};
+    bubble_sort(d);                            // 3 5 1 8 / 3 1 5 8 / 1 3 5 8
+    // 實務上排序用 std::sort(d.begin(), d.end())（<algorithm>）
 }
 ```
 
@@ -392,6 +601,55 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-matrix-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+using Matrix = std::vector<std::vector<int>>;  // 大小不用寫死在型別裡
+
+Matrix transpose(const Matrix& a) {
+    int m = (int)a.size(), n = (int)a[0].size();
+    Matrix b(n, std::vector<int>(m));          // n×m
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < n; j++)
+            b[j][i] = a[i][j];
+    return b;
+}
+
+Matrix add(const Matrix& a, const Matrix& b) {
+    Matrix c = a;
+    for (size_t i = 0; i < a.size(); i++)
+        for (size_t j = 0; j < a[0].size(); j++)
+            c[i][j] = a[i][j] + b[i][j];
+    return c;
+}
+
+Matrix multiply(const Matrix& a, const Matrix& b) {   // (m×n)(n×p) = m×p
+    int m = (int)a.size(), n = (int)b.size(), p = (int)b[0].size();
+    Matrix c(m, std::vector<int>(p, 0));       // 建立時就全部是 0
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < p; j++)
+            for (int k = 0; k < n; k++)
+                c[i][j] += a[i][k] * b[k][j];
+    return c;
+}
+
+int main() {
+    Matrix a = {{1, 2, 3}, {4, 5, 6}};
+    Matrix b = {{1, 0}, {0, 1}, {1, 1}};
+
+    Matrix t = transpose(a);
+    std::cout << "轉置第一列：" << t[0][0] << " " << t[0][1] << "\n";   // 1 4
+    Matrix s = add(a, a);
+    std::cout << "a+a 右下角：" << s[1][2] << "\n";                     // 12
+    Matrix c = multiply(a, b);
+    std::cout << "乘積：" << c[0][0] << " " << c[0][1] << " / "
+              << c[1][0] << " " << c[1][1] << "\n";                    // 4 5 / 10 11
+}
+```
+
 ### 稀疏矩陣轉三行式 {#alg-sparse-3tuple}
 
 **想法**：只記非零元素，每個存成一列（列, 行, 值）。第 0 列放（總列數, 總行數, 非零個數）。
@@ -438,6 +696,37 @@ int main(void) {
        1: 0 4 41
        2: 1 0 11 …… 6: 4 3 45 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-sparse-3tuple-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+struct Term { int row, col, value; };
+
+std::vector<Term> to_3tuple(const std::vector<std::vector<int>>& m) {
+    std::vector<Term> t;
+    t.push_back({0, 0, 0});                    // 第 0 列先佔位，最後再填
+    for (int i = 0; i < (int)m.size(); i++)
+        for (int j = 0; j < (int)m[i].size(); j++)
+            if (m[i][j] != 0) t.push_back({i, j, m[i][j]});
+    t[0] = {(int)m.size(), (int)m[0].size(), (int)t.size() - 1};
+    return t;
+}
+
+int main() {
+    std::vector<std::vector<int>> m = {{0, 0, 0, 0, 41, 0},
+                                       {11, 0, 0, 23, 0, 0},
+                                       {0, 0, 0, 0, 0, 0},
+                                       {0, 0, 15, 0, 56, 0},
+                                       {0, 0, 0, 45, 0, 0}};
+    std::vector<Term> t = to_3tuple(m);
+    for (size_t r = 0; r < t.size(); r++)
+        std::cout << r << ": " << t[r].row << " " << t[r].col << " " << t[r].value << "\n";
+    // 0: 5 6 6 / 1: 0 4 41 / 2: 1 0 11 …… 6: 4 3 45
 }
 ```
 
@@ -509,6 +798,48 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-list-basics-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+struct node {
+    int data;
+    node *link;                                // C++ 可以省略 struct
+};
+
+void print_list(node *front) {
+    for (node *p = front; p != nullptr; p = p->link)
+        std::cout << p->data << " ";
+    std::cout << "\n";
+}
+
+int length(node *front) {
+    int count = 0;
+    for (node *p = front; p != nullptr; p = p->link) count++;
+    return count;
+}
+
+node *build(const std::vector<int>& d) {
+    node *front = nullptr, *rear = nullptr;
+    for (int x : d) {
+        node *n = new node{x, nullptr};        // new：要一個節點並同時設好欄位
+        if (front == nullptr) front = n;
+        else rear->link = n;
+        rear = n;
+    }
+    return front;
+}
+
+int main() {
+    node *front = build({5, 31, 65, 78, 83, 98});
+    print_list(front);                         // 5 31 65 78 83 98
+    std::cout << "長度 " << length(front) << "\n";   // 長度 6
+    // 現成的單向串列：std::forward_list<int>；雙向：std::list<int>
+}
+```
+
 ### 單向串列的插入 {#alg-list-insert}
 
 **想法**：插在節點 `p` 後面只要改兩個指標：新節點先接上 `p` 的下一個，`p` 再改指向新節點。
@@ -570,6 +901,47 @@ int main(void) {
     for (int i = 0; i < 6; i++) insert_sorted(&front, d[i]);
     print_list(front);                         /* 3 5 15 31 65 98 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-list-insert-cpp .fold}
+
+```cpp
+#include <iostream>
+
+struct node { int data; node *link; };
+
+void print_list(node *front) {
+    for (node *p = front; p != nullptr; p = p->link) std::cout << p->data << " ";
+    std::cout << "\n";
+}
+
+void insert_after(node *p, node *x) {
+    x->link = p->link;                         // 1. 新節點先接上 p 原本的下一個
+    p->link = x;                               // 2. p 再改指向新節點
+}
+
+void insert_front(node *&front, node *x) {     // node *&：指標的參考，可以直接改呼叫端的 front
+    x->link = front;
+    front = x;
+}
+
+void insert_sorted(node *&front, int data) {
+    node *x = new node{data, nullptr};
+    if (front == nullptr || data < front->data) {
+        insert_front(front, x);
+        return;
+    }
+    node *p = front;
+    while (p->link != nullptr && p->link->data < data)
+        p = p->link;
+    insert_after(p, x);
+}
+
+int main() {
+    node *front = nullptr;
+    for (int x : {31, 98, 5, 65, 15, 3}) insert_sorted(front, x);   // 不用寫 &front
+    print_list(front);                         // 3 5 15 31 65 98
 }
 ```
 
@@ -640,6 +1012,56 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-list-delete-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+struct node { int data; node *link; };
+
+node *build(const std::vector<int>& d) {
+    node *front = nullptr, *rear = nullptr;
+    for (int x : d) {
+        node *n = new node{x, nullptr};
+        if (front == nullptr) front = n; else rear->link = n;
+        rear = n;
+    }
+    return front;
+}
+
+void print_list(node *front) {
+    for (node *p = front; p != nullptr; p = p->link) std::cout << p->data << " ";
+    std::cout << "\n";
+}
+
+bool delete_value(node *&front, int data) {
+    if (front == nullptr) return false;
+    if (front->data == data) {                 // 刪第一個：改 front
+        node *q = front;
+        front = q->link;
+        delete q;                              // new 來的用 delete 歸還
+        return true;
+    }
+    node *p = front;
+    while (p->link != nullptr && p->link->data != data)
+        p = p->link;
+    if (p->link == nullptr) return false;      // 找不到
+    node *q = p->link;                         // 1. 記住要刪的
+    p->link = q->link;                         // 2. 跳過它
+    delete q;                                  // 3. 歸還
+    return true;
+}
+
+int main() {
+    node *front = build({5, 31, 65, 78, 83, 98});
+    delete_value(front, 98);
+    delete_value(front, 5);
+    std::cout << delete_value(front, 50) << "\n";   // 0（bool 的 false 印成 0）
+    print_list(front);                              // 31 65 78 83
+}
+```
+
 ### 反轉單向串列 {#alg-list-invert}
 
 **想法**：從頭走到尾，把每個節點的箭頭轉向。用三個指標：`head` 是還沒處理的、`mid` 是正在轉的、`last` 是已經轉好那段的開頭。
@@ -694,6 +1116,46 @@ int main(void) {
     struct node *front = invert(build(d, 4));
     print_list(front);         /* 4 3 2 1 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-list-invert-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+struct node { int data; node *link; };
+
+node *build(const std::vector<int>& d) {
+    node *front = nullptr, *rear = nullptr;
+    for (int x : d) {
+        node *n = new node{x, nullptr};
+        if (front == nullptr) front = n; else rear->link = n;
+        rear = n;
+    }
+    return front;
+}
+
+void print_list(node *front) {
+    for (node *p = front; p != nullptr; p = p->link) std::cout << p->data << " ";
+    std::cout << "\n";
+}
+
+node *invert(node *head) {
+    node *mid = nullptr, *last;
+    while (head != nullptr) {
+        last = mid;                            // last 跟上 mid
+        mid = head;                            // mid 跟上 head
+        head = head->link;                     // head 先往前走
+        mid->link = last;                      // 再把 mid 轉向
+    }
+    return mid;
+}
+
+int main() {
+    print_list(invert(build({1, 2, 3, 4})));   // 4 3 2 1
+    // std::forward_list 有現成的 reverse()
 }
 ```
 
@@ -763,6 +1225,56 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-list-concat-free-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+struct node { int data; node *link; };
+
+node *build(const std::vector<int>& d) {
+    node *front = nullptr, *rear = nullptr;
+    for (int x : d) {
+        node *n = new node{x, nullptr};
+        if (front == nullptr) front = n; else rear->link = n;
+        rear = n;
+    }
+    return front;
+}
+
+void print_list(node *front) {
+    for (node *p = front; p != nullptr; p = p->link) std::cout << p->data << " ";
+    std::cout << "\n";
+}
+
+node *concatenate(node *x, node *y) {
+    if (x == nullptr) return y;
+    if (y == nullptr) return x;
+    node *p = x;
+    while (p->link != nullptr) p = p->link;    // 停在 x 的最後一個
+    p->link = y;
+    return x;
+}
+
+void free_list(node *&front) {
+    node *p = front;
+    while (p != nullptr) {
+        node *tmp = p;                         // 記住目前節點
+        p = p->link;                           // 先往前走
+        delete tmp;                            // 再歸還
+    }
+    front = nullptr;
+}
+
+int main() {
+    node *z = concatenate(build({1, 2}), build({3, 4, 5}));
+    print_list(z);                             // 1 2 3 4 5
+    free_list(z);
+    std::cout << (z == nullptr ? "已釋放" : "?") << "\n";
+}
+```
+
 ### 雙向串列的插入與刪除 {#alg-doubly}
 
 **想法**：每個節點有往前 `l_link`、往後 `r_link` 兩個指標。插入在 `p` 和 `q` 之間要改 4 個指標；刪除 `x` 只要讓前後兩個互相跳過它。
@@ -825,6 +1337,50 @@ int main(void) {
     delete_node(&front, front);                /* 刪第一個 10 */
     print_both(front);                         /* 30 | 30 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-doubly-cpp .fold}
+
+```cpp
+#include <iostream>
+
+struct dnode {
+    int data;
+    dnode *l_link = nullptr, *r_link = nullptr;    // 成員預設值：new 出來就是 nullptr
+};
+
+void print_both(dnode *front) {
+    dnode *last = nullptr;
+    for (dnode *p = front; p != nullptr; p = p->r_link) { std::cout << p->data << " "; last = p; }
+    std::cout << "| ";
+    for (dnode *p = last; p != nullptr; p = p->l_link) std::cout << p->data << " ";
+    std::cout << "\n";
+}
+
+void insert_after(dnode *p, dnode *x) {
+    dnode *q = p->r_link;
+    x->l_link = p;                             // 新節點往前接 p
+    x->r_link = q;                             // 新節點往後接 q
+    if (q != nullptr) q->l_link = x;           // q 往前改接新節點
+    p->r_link = x;                             // p 往後改接新節點（最後做）
+}
+
+void delete_node(dnode *&front, dnode *x) {
+    if (x->l_link != nullptr) x->l_link->r_link = x->r_link;
+    else front = x->r_link;                    // x 是第一個
+    if (x->r_link != nullptr) x->r_link->l_link = x->l_link;
+    delete x;
+}
+
+int main() {
+    dnode *front = new dnode{10};
+    insert_after(front, new dnode{30});
+    insert_after(front, new dnode{20});
+    print_both(front);                         // 10 20 30 | 30 20 10
+    delete_node(front, front->r_link);         // 刪 20
+    delete_node(front, front);                 // 刪 10
+    print_both(front);                         // 30 | 30
 }
 ```
 
@@ -898,6 +1454,61 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-circular-list-cpp .fold}
+
+```cpp
+#include <iostream>
+
+struct node { int data; node *link; };
+
+void print_circle(node *front) {
+    if (front == nullptr) { std::cout << "(空)\n"; return; }
+    node *p = front;
+    do {
+        std::cout << p->data << " ";
+        p = p->link;
+    } while (p != front);                      // 回到起點就停
+    std::cout << "\n";
+}
+
+node *find_last(node *front) {
+    node *p = front;
+    while (p->link != front) p = p->link;
+    return p;
+}
+
+void insert_front(node *&front, int data) {
+    node *x = new node{data, nullptr};
+    if (front == nullptr) { x->link = x; front = x; return; }   // 自己指自己
+    node *last = find_last(front);
+    x->link = front;
+    last->link = x;                            // 最後一個也要改
+    front = x;
+}
+
+void delete_front(node *&front) {
+    node *q = front;
+    if (q == nullptr) return;
+    if (q->link == q) { delete q; front = nullptr; return; }    // 只有一個
+    node *last = find_last(q);
+    last->link = q->link;
+    front = q->link;
+    delete q;
+}
+
+int main() {
+    node *front = nullptr;
+    insert_front(front, 98);
+    insert_front(front, 31);
+    insert_front(front, 5);
+    print_circle(front);                       // 5 31 98
+    insert_front(front, 99);
+    delete_front(front);
+    delete_front(front);
+    print_circle(front);                       // 31 98
+}
+```
+
 ### 多項式相加（鏈結） {#alg-poly-add}
 
 **想法**：兩個多項式都依指數由大到小串好。兩個指標同時往下走，像合併兩條排好的隊伍。
@@ -964,6 +1575,53 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-poly-add-cpp .fold}
+
+```cpp
+#include <iostream>
+
+struct pnode {
+    int coef, exp;
+    pnode *link;
+};
+
+void append(pnode *&front, pnode *&rear, int coef, int exp) {
+    pnode *x = new pnode{coef, exp, nullptr};
+    if (front == nullptr) front = x; else rear->link = x;
+    rear = x;
+}
+
+pnode *poly_add(pnode *a, pnode *b) {
+    pnode *front = nullptr, *rear = nullptr;
+    while (a != nullptr && b != nullptr) {
+        if (a->exp == b->exp) {
+            int sum = a->coef + b->coef;
+            if (sum != 0) append(front, rear, sum, a->exp);
+            a = a->link; b = b->link;
+        } else if (a->exp > b->exp) {
+            append(front, rear, a->coef, a->exp); a = a->link;
+        } else {
+            append(front, rear, b->coef, b->exp); b = b->link;
+        }
+    }
+    for (; a != nullptr; a = a->link) append(front, rear, a->coef, a->exp);   // 剩下的
+    for (; b != nullptr; b = b->link) append(front, rear, b->coef, b->exp);
+    return front;
+}
+
+void print_poly(pnode *p) {
+    for (; p != nullptr; p = p->link)
+        std::cout << p->coef << "x^" << p->exp << (p->link ? " + " : "\n");
+}
+
+int main() {
+    pnode *a = nullptr, *ra = nullptr, *b = nullptr, *rb = nullptr;
+    append(a, ra, 6, 5); append(a, ra, 12, 3); append(a, ra, 11, 0);
+    append(b, rb, 3, 3); append(b, rb, 2, 1);
+    print_poly(poly_add(a, b));                // 6x^5 + 15x^3 + 2x^1 + 11x^0
+}
+```
+
 ## 堆疊與佇列（第 4 章） {#stacks-queues}
 
 ### 以陣列實作堆疊 {#alg-stack-array}
@@ -1014,6 +1672,42 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-stack-array-cpp .fold}
+
+```cpp
+#include <iostream>
+
+const int N = 3;
+
+class Stack {                                  // 資料和操作包在一起，外面改不到 top
+    int data[N];
+    int top = -1;
+public:
+    bool is_full() const  { return top == N - 1; }
+    bool is_empty() const { return top == -1; }
+    bool push(int x) {
+        if (is_full()) { std::cout << "堆疊已滿\n"; return false; }
+        data[++top] = x;                       // 先移再放
+        return true;
+    }
+    bool pop(int &x) {                         // int &x：用參考把值帶出去
+        if (is_empty()) { std::cout << "堆疊已空\n"; return false; }
+        x = data[top--];                       // 先拿再移
+        return true;
+    }
+};
+
+int main() {
+    Stack s;
+    int x;
+    s.push(1); s.push(2); s.push(3);
+    s.push(4);                                 // 堆疊已滿
+    while (s.pop(x)) std::cout << x << " ";    // 3 2 1 堆疊已空
+    std::cout << "\n";
+    // 現成的：std::stack<int> st; st.push(1); st.top(); st.pop(); st.empty();（<stack>）
+}
+```
+
 ### 以鏈結串列實作堆疊 {#alg-stack-linked}
 
 **想法**：`top` 指向第一個節點。push 插在最前面、pop 從最前面拿，都只改一兩個指標，而且不會滿。
@@ -1061,6 +1755,41 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-stack-linked-cpp .fold}
+
+```cpp
+#include <iostream>
+
+class LinkedStack {
+    struct node { int data; node *link; };
+    node *top = nullptr;
+public:
+    void push(int data) {
+        top = new node{data, top};             // 新節點指向原頂端，top 改指新節點
+    }
+    bool pop(int &data) {
+        if (top == nullptr) return false;
+        node *x = top;
+        data = x->data;                        // 先拿資料
+        top = x->link;                         // top 往下移
+        delete x;                              // 最後才歸還
+        return true;
+    }
+    ~LinkedStack() {                           // 解構子：物件消失時自動歸還剩下的節點
+        int d;
+        while (pop(d)) {}
+    }
+};
+
+int main() {
+    LinkedStack s;
+    int d;
+    for (int i = 1; i <= 4; i++) s.push(i * 10);
+    while (s.pop(d)) std::cout << d << " ";    // 40 30 20 10
+    std::cout << "\n";
+}
+```
+
 ### 以陣列實作佇列 {#alg-queue-array}
 
 **想法**：從 `rear` 端加入、從 `front` 端刪除，先進先出（FIFO）。
@@ -1102,6 +1831,39 @@ int main(void) {
     del(&x); printf("刪除 %d\n", x);       /* 刪除 1 */
     add(4);                                /* 佇列已滿：前面空出來的格子用不到 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-queue-array-cpp .fold}
+
+```cpp
+#include <iostream>
+
+const int N = 3;
+
+class ArrayQueue {
+    int data[N];
+    int front = -1, rear = -1;                 // front：第一筆的前一格；rear：最後一筆
+public:
+    bool add(int x) {
+        if (rear == N - 1) { std::cout << "佇列已滿\n"; return false; }
+        data[++rear] = x;
+        return true;
+    }
+    bool del(int &x) {
+        if (front == rear) { std::cout << "佇列已空\n"; return false; }
+        x = data[++front];
+        return true;
+    }
+};
+
+int main() {
+    ArrayQueue q;
+    int x;
+    q.add(1); q.add(2); q.add(3);
+    q.del(x); std::cout << "刪除 " << x << "\n";   // 刪除 1
+    q.add(4);                                       // 佇列已滿
+    // 現成的：std::queue<int> qu; qu.push(1); qu.front(); qu.pop();（<queue>）
 }
 ```
 
@@ -1155,6 +1917,43 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-queue-linked-cpp .fold}
+
+```cpp
+#include <iostream>
+
+class LinkedQueue {
+    struct node { int data; node *link; };
+    node *front = nullptr, *rear = nullptr;
+public:
+    void add(int data) {
+        node *x = new node{data, nullptr};
+        if (front == nullptr) front = rear = x;    // 原本是空的
+        else { rear->link = x; rear = x; }
+    }
+    bool del(int &data) {
+        if (front == nullptr) return false;
+        node *x = front;
+        data = x->data;
+        front = x->link;
+        if (front == nullptr) rear = nullptr;      // 刪完變空，rear 也要清
+        delete x;
+        return true;
+    }
+    ~LinkedQueue() { int d; while (del(d)) {} }
+};
+
+int main() {
+    LinkedQueue q;
+    int d;
+    q.add(1); q.add(2);
+    q.del(d); std::cout << d << " ";
+    q.add(3);
+    while (q.del(d)) std::cout << d << " ";    // 1 2 3
+    std::cout << "\n";
+}
+```
+
 ### 環狀佇列 {#alg-circular-queue}
 
 **想法**：把陣列想成頭尾相接的環，`rear` 到最後一格之後繞回第 0 格，前面空出的格子可以再用。
@@ -1203,6 +2002,45 @@ int main(void) {
     add('D');                       /* rear=3 */
     add('E');                       /* (3+1)%4 = 0 = front，已滿 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-circular-queue-cpp .fold}
+
+```cpp
+#include <iostream>
+
+const int N = 4;
+
+class CircularQueue {
+    char data[N];
+    int front = N - 1, rear = N - 1;
+public:
+    bool add(char x) {
+        int next = (rear + 1) % N;
+        if (next == front) { std::cout << "加入 " << x << "：已滿\n"; return false; }
+        rear = next;
+        data[rear] = x;
+        std::cout << "加入 " << x << "：front=" << front << " rear=" << rear << "\n";
+        return true;
+    }
+    bool del(char &x) {
+        if (front == rear) { std::cout << "已空\n"; return false; }
+        front = (front + 1) % N;
+        x = data[front];
+        std::cout << "刪除 " << x << "：front=" << front << " rear=" << rear << "\n";
+        return true;
+    }
+};
+
+int main() {
+    CircularQueue q;
+    char x;
+    q.add('A'); q.add('B'); q.add('C');
+    q.add('D');                                // 已滿：N=4 只能放 3 個
+    q.del(x);                                  // 刪除 A：front=0
+    q.add('D');                                // rear=3
+    q.add('E');                                // 已滿
 }
 ```
 
@@ -1258,6 +2096,44 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-multiple-stacks-cpp .fold}
+
+```cpp
+#include <iostream>
+
+const int N = 9;
+const int M = 3;
+
+class MultiStack {
+    int data[N];
+    int b[M + 1], t[M];
+public:
+    MultiStack() {                             // 建構子：宣告物件時自動初始化
+        for (int i = 0; i < M; i++) b[i] = t[i] = i * (N / M) - 1;
+        b[M] = N - 1;
+    }
+    bool push(int i, int x) {
+        if (t[i] == b[i + 1]) { std::cout << "堆疊 " << i << " 已滿\n"; return false; }
+        data[++t[i]] = x;
+        return true;
+    }
+    bool pop(int i, int &x) {
+        if (t[i] == b[i]) { std::cout << "堆疊 " << i << " 已空\n"; return false; }
+        x = data[t[i]--];
+        return true;
+    }
+};
+
+int main() {
+    MultiStack s;                              // b = -1, 2, 5, 8
+    int x;
+    s.push(1, 10); s.push(1, 11); s.push(1, 12);
+    s.push(1, 13);                             // 堆疊 1 已滿
+    s.pop(1, x); std::cout << x << "\n";       // 12
+    s.pop(0, x);                               // 堆疊 0 已空
+}
+```
+
 ### 雙向佇列 {#alg-deque}
 
 **想法**（課本定義）：一個陣列裡放兩個佇列，左邊的從左往右長、右邊的從右往左長，共用中間的空位，兩邊碰頭才算滿。
@@ -1295,6 +2171,36 @@ int main(void) {
     del_left(&x);  printf("%d ", x);           /* 1（左邊先進先出） */
     del_right(&x); printf("%d\n", x);          /* 9 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-deque-cpp .fold}
+
+```cpp
+#include <iostream>
+
+const int N = 5;
+
+class TwoWayQueue {                            // 課本的「雙向佇列」
+    int q[N];
+    int f0 = -1, r0 = -1;                      // 左佇列：往右長
+    int f1 = N,  r1 = N;                       // 右佇列：往左長
+public:
+    bool add_left(int x)  { if (r0 + 1 == r1) { std::cout << "滿溢\n"; return false; } q[++r0] = x; return true; }
+    bool add_right(int x) { if (r0 + 1 == r1) { std::cout << "滿溢\n"; return false; } q[--r1] = x; return true; }
+    bool del_left(int &x)  { if (f0 == r0) return false; x = q[++f0]; return true; }
+    bool del_right(int &x) { if (f1 == r1) return false; x = q[--f1]; return true; }
+};
+
+int main() {
+    TwoWayQueue d;
+    int x;
+    d.add_left(1); d.add_left(2); d.add_left(3);
+    d.add_right(9); d.add_right(8);
+    d.add_right(7);                            // 滿溢
+    d.del_left(x);  std::cout << x << " ";     // 1
+    d.del_right(x); std::cout << x << "\n";    // 9
+    // 一般說的 deque 是 std::deque<int>：push_front / push_back / pop_front / pop_back
 }
 ```
 
@@ -1345,6 +2251,46 @@ int main(void) {
     while (del(&x)) printf("%s ", x);          /* a1 a2 b1 b2 c1 */
     printf("\n");
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-priority-queue-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <string>
+
+const int N = 10;
+
+class PriorityQueue {
+    std::string q[N];
+    int r[3] = {-1, -1, -1};                   // A、B、C 各級的尾端
+public:
+    bool add(const std::string &x, int level) {    // level：0=A、1=B、2=C
+        if (r[2] == N - 1) { std::cout << "已滿\n"; return false; }
+        int pos = r[level] + 1;
+        for (int i = r[2]; i >= pos; i--)      // 從最後面往前搬
+            q[i + 1] = q[i];
+        q[pos] = x;
+        for (int k = level; k < 3; k++) r[k]++;
+        return true;
+    }
+    bool del(std::string &x) {
+        if (r[2] == -1) return false;
+        x = q[0];
+        for (int i = 0; i < r[2]; i++) q[i] = q[i + 1];
+        for (int k = 0; k < 3; k++) if (r[k] >= 0) r[k]--;
+        return true;
+    }
+};
+
+int main() {
+    PriorityQueue pq;
+    std::string x;
+    pq.add("b1", 1); pq.add("c1", 2); pq.add("a1", 0); pq.add("b2", 1); pq.add("a2", 0);
+    while (pq.del(x)) std::cout << x << " ";   // a1 a2 b1 b2 c1
+    std::cout << "\n";
+    // std::priority_queue（<queue>）同級不保證先進先出，要用 (等級, 流水號) 當比較鍵
 }
 ```
 
@@ -1410,6 +2356,50 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-infix-to-postfix-cpp .fold}
+
+```cpp
+#include <cctype>
+#include <iostream>
+#include <stack>
+#include <string>
+
+int priority(char op) {
+    switch (op) {
+        case '^': return 3;
+        case '*': case '/': return 2;
+        case '+': case '-': return 1;
+        default: return 0;                     // '('
+    }
+}
+
+std::string infix_to_postfix(const std::string &in) {
+    std::stack<char> st;                       // 用 STL 的堆疊
+    std::string out;
+    for (char c : in) {
+        if (std::isalnum((unsigned char)c)) out += c;        // 運算元直接輸出
+        else if (c == '(') st.push(c);
+        else if (c == ')') {
+            while (st.top() != '(') { out += st.top(); st.pop(); }
+            st.pop();                                         // 丟掉 '('
+        } else {
+            while (!st.empty() && priority(st.top()) >= priority(c)) {
+                out += st.top(); st.pop();
+            }
+            st.push(c);
+        }
+    }
+    while (!st.empty()) { out += st.top(); st.pop(); }       // 剩下的全部輸出
+    return out;
+}
+
+int main() {
+    for (std::string s : {"a+b/(c-d)*e-f", "a^b-c/d+e", "a-b*(c+d)^e"})
+        std::cout << s << " → " << infix_to_postfix(s) << "\n";
+    // abcd-/e*+f-、ab^cd/-e+、abcd+e^*-
+}
+```
+
 ### 後置式求值 {#alg-postfix-eval}
 
 **想法**：讀到運算元就 push；讀到運算子就 pop 兩個出來算，結果再 push 回去。最後堆疊剩下的就是答案。
@@ -1455,6 +2445,40 @@ int main(void) {
     printf("%d\n", eval_postfix("1431-/2*+"));   /* 5 */
     printf("%d\n", eval_postfix("42/"));         /* 2：是 4/2 不是 2/4 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-postfix-eval-cpp .fold}
+
+```cpp
+#include <cctype>
+#include <iostream>
+#include <stack>
+#include <string>
+
+int eval_postfix(const std::string &s) {
+    std::stack<int> st;
+    for (char c : s) {
+        if (std::isdigit((unsigned char)c)) st.push(c - '0');
+        else {
+            int right = st.top(); st.pop();    // 先出來的是右邊
+            int left  = st.top(); st.pop();
+            int r = 0;
+            switch (c) {
+                case '+': r = left + right; break;
+                case '-': r = left - right; break;
+                case '*': r = left * right; break;
+                case '/': r = left / right; break;
+            }
+            st.push(r);
+        }
+    }
+    return st.top();
+}
+
+int main() {
+    std::cout << eval_postfix("1431-/2*+") << "\n";   // 5
+    std::cout << eval_postfix("42/") << "\n";         // 2
 }
 ```
 
@@ -1504,6 +2528,35 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-power-factorial-cpp .fold}
+
+```cpp
+#include <iostream>
+
+long long two_power_n(int n) {
+    if (n == 0) return 1;                      // 終止條件
+    return 2 * two_power_n(n - 1);             // 引數變小
+}
+
+long long power(long long n, int m) {
+    if (m == 0) return 1;
+    return n * power(n, m - 1);
+}
+
+long long factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+long long power_nr(long long n, int m) { long long r = 1; for (int i = 0; i < m; i++) r *= n; return r; }
+long long factorial_nr(int n)          { long long r = 1; for (int i = 2; i <= n; i++) r *= i; return r; }
+
+int main() {
+    std::cout << two_power_n(10) << " " << power(3, 4) << " " << factorial(5) << "\n";   // 1024 81 120
+    std::cout << power_nr(3, 4) << " " << factorial_nr(5) << "\n";                       // 81 120
+}
+```
+
 ### 費氏數列 {#alg-fibonacci}
 
 **想法**：$F_0 = 0$、$F_1 = 1$、$F_n = F_{n-1} + F_{n-2}$。
@@ -1547,6 +2600,36 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-fibonacci-cpp .fold}
+
+```cpp
+#include <iostream>
+
+int calls = 0;
+
+long long fib(int n) {
+    calls++;
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+    return fib(n - 1) + fib(n - 2);
+}
+
+long long fib_nr(int n) {
+    long long a = 0, b = 1;
+    for (int i = 0; i < n; i++) {
+        long long t = a + b;
+        a = b; b = t;
+    }
+    return a;
+}
+
+int main() {
+    long long f = fib(10);                     // 先算完，calls 才是最後的次數
+    std::cout << "fib(10) = " << f << "，呼叫了 " << calls << " 次\n";   // 55，177 次
+    std::cout << "fib_nr(10) = " << fib_nr(10) << "\n";                  // 55
+}
+```
+
 ### 河內塔 {#alg-hanoi}
 
 **想法**：要把 $n$ 個從 src 搬到 dst：先把上面 $n-1$ 個搬到 mid，再搬最大的，再把 $n-1$ 個從 mid 搬到 dst。
@@ -1576,6 +2659,24 @@ int main(void) {
     hanoi(3, 'a', 'b', 'c');
     /* 7 步：1 a→c、2 a→b、1 c→b、3 a→c、1 b→a、2 b→c、1 a→c */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-hanoi-cpp .fold}
+
+```cpp
+#include <iostream>
+
+void hanoi(int n, char src, char mid, char dst) {
+    static int step = 0;
+    if (n > 1) hanoi(n - 1, src, dst, mid);   // 上面 n-1 個先移到中間柱
+    std::cout << "步驟 " << ++step << "：將 " << n << " 號圓盤從 "
+              << src << " 柱搬到 " << dst << " 柱\n";
+    if (n > 1) hanoi(n - 1, mid, src, dst);   // 再把 n-1 個移到目的柱
+}
+
+int main() {
+    hanoi(3, 'a', 'b', 'c');                   // 7 步
 }
 ```
 
@@ -1610,6 +2711,27 @@ int gcd_nr(int a, int b) {        /* 非遞迴 */
 int main(void) {
     printf("%d %d %d\n", gcd(48, 18), gcd_nr(48, 18), gcd(18, 48));   /* 6 6 6 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-gcd-cpp .fold}
+
+```cpp
+#include <iostream>
+
+int gcd(int a, int b) {
+    if (a % b == 0) return b;
+    return gcd(b, a % b);
+}
+
+int gcd_nr(int a, int b) {
+    while (b != 0) { int r = a % b; a = b; b = r; }
+    return a;
+}
+
+int main() {
+    std::cout << gcd(48, 18) << " " << gcd_nr(48, 18) << " " << gcd(18, 48) << "\n";   // 6 6 6
+    // C++17 現成的：std::gcd(48, 18)（<numeric>）
 }
 ```
 
@@ -1653,6 +2775,31 @@ int main(void) {
     perm(d, 0, 3);                          /* abc acb bac bca cba cab */
     printf("\n");
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-permutation-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <string>
+#include <utility>
+
+void perm(std::string &d, int k) {             // 排 d[k..]
+    int n = (int)d.size();
+    if (k == n - 1) { std::cout << d << " "; return; }
+    for (int i = k; i < n; i++) {
+        std::swap(d[k], d[i]);                 // 讓 d[i] 坐第 k 位
+        perm(d, k + 1);
+        std::swap(d[k], d[i]);                 // 換回來
+    }
+}
+
+int main() {
+    std::string d = "abc";
+    perm(d, 0);                                // abc acb bac bca cba cab
+    std::cout << "\n";
+    // std::next_permutation（<algorithm>）也能列出全部，但順序是字典序：abc acb bac bca cab cba
 }
 ```
 
@@ -1714,6 +2861,41 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-traversal-cpp .fold}
+
+```cpp
+#include <iostream>
+
+struct tnode {
+    tnode *l_child;
+    char data;
+    tnode *r_child;
+    tnode(char d, tnode *l = nullptr, tnode *r = nullptr)   // 建構子 + 預設參數
+        : l_child(l), data(d), r_child(r) {}
+};
+
+void preorder(tnode *p) {
+    if (p != nullptr) { std::cout << p->data << " "; preorder(p->l_child); preorder(p->r_child); }
+}
+void inorder(tnode *p) {
+    if (p != nullptr) { inorder(p->l_child); std::cout << p->data << " "; inorder(p->r_child); }
+}
+void postorder(tnode *p) {
+    if (p != nullptr) { postorder(p->l_child); postorder(p->r_child); std::cout << p->data << " "; }
+}
+
+int main() {
+    tnode *root =
+        new tnode('+', new tnode('-', new tnode('A'), new tnode('B')),
+                       new tnode('/', new tnode('*', new tnode('C'),
+                                                     new tnode('-', new tnode('D'), new tnode('E'))),
+                                      new tnode('F')));
+    preorder(root);  std::cout << "\n";        // + - A B / * C - D E F
+    inorder(root);   std::cout << "\n";        // A - B + C * D - E / F
+    postorder(root); std::cout << "\n";        // A B - C D E - * F / +
+}
+```
+
 ### 二元樹的一維陣列表示法 {#alg-tree-array}
 
 **想法**：把樹當成完滿二元樹由上到下、由左到右編號 1, 2, 3…，節點 $i$ 的左子在 $2i$、右子在 $2i+1$、父節點在 $\lfloor i/2 \rfloor$。
@@ -1758,6 +2940,36 @@ int main(void) {
     preorder(1);                                /* A B D C E */
     printf("\n");
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-tree-array-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+// 第 0 格不用；'\0' 表示空位
+const std::vector<char> tree = {'\0', 'A', 'B', 'C', 'D', '\0', 'E', '\0'};
+const int N = (int)tree.size() - 1;
+
+int left(int i)   { return 2 * i; }
+int right(int i)  { return 2 * i + 1; }
+int parent(int i) { return i / 2; }
+
+void preorder(int i) {
+    if (i > N || tree[i] == '\0') return;      // 先檢查範圍再讀
+    std::cout << tree[i] << " ";
+    preorder(left(i));
+    preorder(right(i));
+}
+
+int main() {
+    std::cout << "B 的右子 " << (tree[right(2)] ? tree[right(2)] : '-')
+              << "、C 的左子 " << tree[left(3)]
+              << "、E 的父 " << tree[parent(6)] << "\n";   // B 的右子 -、C 的左子 E、E 的父 C
+    preorder(1);                                           // A B D C E
+    std::cout << "\n";
 }
 ```
 
@@ -1825,6 +3037,48 @@ int main(void) {
     struct tnode *u = build_post_in("DEBFCA", in, 6);
     preorder(u); printf("\n");                         /* ABDECF */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-rebuild-tree-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <string>
+
+struct tnode {
+    tnode *l_child = nullptr;
+    char data;
+    tnode *r_child = nullptr;
+    explicit tnode(char d) : data(d) {}
+};
+
+// string::substr(起點, 長度) 直接切出子樹的那一段
+tnode *build_pre_in(const std::string &pre, const std::string &in) {
+    if (pre.empty()) return nullptr;
+    tnode *root = new tnode(pre[0]);                   // 前序第一個是樹根
+    size_t k = in.find(pre[0]);                        // 左子樹有 k 個
+    root->l_child = build_pre_in(pre.substr(1, k), in.substr(0, k));
+    root->r_child = build_pre_in(pre.substr(1 + k), in.substr(k + 1));
+    return root;
+}
+
+tnode *build_post_in(const std::string &post, const std::string &in) {
+    if (post.empty()) return nullptr;
+    char r = post.back();                              // 後序最後一個是樹根
+    tnode *root = new tnode(r);
+    size_t k = in.find(r);
+    root->l_child = build_post_in(post.substr(0, k), in.substr(0, k));
+    root->r_child = build_post_in(post.substr(k, post.size() - 1 - k), in.substr(k + 1));
+    return root;
+}
+
+void preorder(tnode *p)  { if (p) { std::cout << p->data; preorder(p->l_child); preorder(p->r_child); } }
+void postorder(tnode *p) { if (p) { postorder(p->l_child); postorder(p->r_child); std::cout << p->data; } }
+
+int main() {
+    postorder(build_pre_in("ABDECF", "DBEAFC")); std::cout << "\n";    // DEBFCA
+    preorder(build_post_in("DEBFCA", "DBEAFC")); std::cout << "\n";    // ABDECF
 }
 ```
 
@@ -1924,6 +3178,76 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-threaded-tree-cpp .fold}
+
+```cpp
+#include <iostream>
+
+struct ttnode {
+    int l_flag = 1;                            // 1 = 左子樹，0 = 左引線
+    ttnode *l_child;
+    char data;
+    ttnode *r_child;
+    int r_flag = 1;                            // 1 = 右子樹，0 = 右引線
+    ttnode(char d, ttnode *l = nullptr, ttnode *r = nullptr)
+        : l_child(l), data(d), r_child(r) {}
+};
+
+ttnode *head, *prev;
+
+void thread(ttnode *p) {                       // 中序走一遍，prev 是中序的前一個
+    if (p == nullptr) return;
+    thread(p->l_child);
+    if (p->l_child == nullptr) { p->l_flag = 0; p->l_child = prev; }
+    if (prev != head && prev->r_child == nullptr) { prev->r_flag = 0; prev->r_child = p; }
+    prev = p;
+    thread(p->r_child);
+}
+
+ttnode *make_threaded(ttnode *root) {
+    head = new ttnode('#', root);
+    head->r_child = head;
+    prev = head;
+    thread(root);
+    prev->r_flag = 0; prev->r_child = head;    // 最右節點的右引線指回 head
+    return head;
+}
+
+ttnode *insuc(ttnode *y) {
+    ttnode *s = y->r_child;
+    if (y->r_flag == 0) return s;              // 右邊是引線
+    while (s->l_flag == 1) s = s->l_child;     // 右子樹最左下
+    return s;
+}
+
+void inorder_threaded(ttnode *h) {
+    for (ttnode *p = insuc(h); p != h; p = insuc(p))
+        std::cout << p->data << " ";
+    std::cout << "\n";
+}
+
+void insert_right(ttnode *x, ttnode *y) {
+    y->r_child = x->r_child; y->r_flag = x->r_flag;
+    y->l_child = x;          y->l_flag = 0;
+    x->r_child = y;          x->r_flag = 1;
+    if (y->r_flag == 1) {
+        ttnode *z = insuc(y);
+        z->l_child = y;
+    }
+}
+
+int main() {
+    ttnode *E = new ttnode('E');
+    ttnode *B = new ttnode('B', new ttnode('D'), E);
+    ttnode *A = new ttnode('A', B, new ttnode('C'));
+    ttnode *h = make_threaded(A);
+    inorder_threaded(h);                       // D B E A C
+    insert_right(B, new ttnode('X'));
+    inorder_threaded(h);                       // D B X E A C
+    std::cout << "E 的左引線指向 " << E->l_child->data << "\n";   // X
+}
+```
+
 ### 二元搜尋樹 {#alg-bst}
 
 **想法**：左子樹全部比自己小、右子樹全部大於或等於自己。搜尋和插入都是「比較小往左、比較大往右」。
@@ -1997,6 +3321,65 @@ int main(void) {
     printf("新樹根 %d\n", root->data);                 /* 33 */
     inorder(root); printf("\n");                       /* 20 33 47 55 76 120 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-bst-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <vector>
+
+struct tnode {
+    tnode *l_child = nullptr;
+    int data;
+    tnode *r_child = nullptr;
+    explicit tnode(int d) : data(d) {}
+};
+
+// tnode *&p：直接改父節點裡那個指標，不用回傳再接回去
+void insert(tnode *&p, int key) {
+    if (p == nullptr) p = new tnode(key);              // 空位就是新家
+    else if (key < p->data) insert(p->l_child, key);
+    else                    insert(p->r_child, key);   // 相等放右
+}
+
+tnode *search(tnode *p, int key) {
+    while (p != nullptr && p->data != key)
+        p = (key < p->data) ? p->l_child : p->r_child;
+    return p;
+}
+
+void delete_key(tnode *&p, int key) {
+    if (p == nullptr) return;
+    if (key < p->data)      delete_key(p->l_child, key);
+    else if (key > p->data) delete_key(p->r_child, key);
+    else if (p->l_child == nullptr || p->r_child == nullptr) {   // 樹葉或一個子樹
+        tnode *old = p;
+        p = p->l_child ? p->l_child : p->r_child;      // 父節點直接改接子樹
+        delete old;
+    } else {
+        tnode *s = p->r_child;                         // 中序後繼：右子樹最左
+        while (s->l_child != nullptr) s = s->l_child;
+        p->data = s->data;
+        delete_key(p->r_child, s->data);
+    }
+}
+
+void inorder(tnode *p) {
+    if (p) { inorder(p->l_child); std::cout << p->data << " "; inorder(p->r_child); }
+}
+
+int main() {
+    tnode *root = nullptr;
+    for (int x : {31, 76, 11, 47, 20, 55, 33, 120}) insert(root, x);
+    inorder(root); std::cout << "\n";                  // 11 20 31 33 47 55 76 120
+    std::cout << "找 55：" << (search(root, 55) ? "有" : "沒有") << "\n";
+    delete_key(root, 11);
+    delete_key(root, 31);
+    std::cout << "新樹根 " << root->data << "\n";      // 33
+    inorder(root); std::cout << "\n";                  // 20 33 47 55 76 120
+    // 現成的平衡搜尋樹：std::set<int>、std::map<K, V>（<set>、<map>）
 }
 ```
 
@@ -2090,6 +3473,78 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-avl-cpp .fold}
+
+```cpp
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+struct anode {
+    anode *l_child = nullptr;
+    int data;
+    int height = 1;                            // 新節點是樹葉，高度 1
+    anode *r_child = nullptr;
+    explicit anode(int d) : data(d) {}
+};
+
+int h(anode *p)       { return p ? p->height : 0; }
+void update(anode *p) { p->height = 1 + std::max(h(p->l_child), h(p->r_child)); }
+int bf(anode *p)      { return h(p->l_child) - h(p->r_child); }
+
+anode *rotate_right(anode *a) {                // LL
+    anode *b = a->l_child;
+    a->l_child = b->r_child;
+    b->r_child = a;
+    update(a); update(b);                      // 先下後上
+    return b;
+}
+
+anode *rotate_left(anode *a) {                 // RR
+    anode *b = a->r_child;
+    a->r_child = b->l_child;
+    b->l_child = a;
+    update(a); update(b);
+    return b;
+}
+
+anode *insert(anode *p, int key) {
+    if (p == nullptr) return new anode(key);
+    if (key < p->data) p->l_child = insert(p->l_child, key);
+    else               p->r_child = insert(p->r_child, key);
+    update(p);
+    if (bf(p) == 2) {
+        if (key < p->l_child->data) return rotate_right(p);       // LL
+        p->l_child = rotate_left(p->l_child);                     // LR
+        return rotate_right(p);
+    }
+    if (bf(p) == -2) {
+        if (key >= p->r_child->data) return rotate_left(p);       // RR
+        p->r_child = rotate_right(p->r_child);                    // RL
+        return rotate_left(p);
+    }
+    return p;
+}
+
+void preorder(anode *p) {
+    if (p) { std::cout << p->data << " "; preorder(p->l_child); preorder(p->r_child); }
+}
+
+anode *build(const std::vector<int> &d) {
+    anode *root = nullptr;
+    for (int x : d) root = insert(root, x);
+    return root;
+}
+
+int main() {
+    preorder(build({66, 36, 75, 22, 45, 16})); std::cout << "\n";   // 36 22 16 66 45 75
+    preorder(build({36, 24, 60, 55, 88, 92})); std::cout << "\n";   // 60 36 24 55 88 92
+    preorder(build({88, 60, 95, 46, 68, 93, 98, 22, 55, 62, 78, 64}));
+    std::cout << "\n";                                              // 68 60 46 22 55 62 64 88 78 95 93 98
+    preorder(build({36, 60, 55})); std::cout << "\n";               // 55 36 60
+}
+```
+
 ### B 樹的搜尋 {#alg-b-tree-search}
 
 **想法**：$m$ 階 B 樹的每個節點最多放 $m-1$ 個排好序的鍵值和 $m$ 個子樹指標。搜尋時在節點裡找到第一個「不小於 $k$」的鍵值，相等就找到，否則往它左邊那個子樹走。
@@ -2145,6 +3600,45 @@ int main(void) {
 }
 ```
 
+#### C++ 程式 {#alg-b-tree-search-cpp .fold}
+
+```cpp
+#include <iostream>
+
+const int M = 3;
+
+struct bnode {
+    int n = 0;
+    int key[M - 1] = {};
+    bnode *child[M] = {};                      // = {}：全部設成 nullptr
+};
+
+bnode *mk(int n, int k0, int k1) {
+    bnode *p = new bnode;
+    p->n = n; p->key[0] = k0; p->key[1] = k1;
+    return p;
+}
+
+bool b_search(bnode *p, int k) {
+    while (p != nullptr) {
+        int i = 0;
+        while (i < p->n && k > p->key[i]) i++;
+        if (i < p->n && p->key[i] == k) return true;
+        p = p->child[i];
+    }
+    return false;
+}
+
+int main() {
+    bnode *root = mk(2, 30, 60);
+    root->child[0] = mk(2, 10, 20);
+    root->child[1] = mk(1, 40, 0);
+    root->child[2] = mk(2, 70, 80);
+    std::cout << b_search(root, 40) << " " << b_search(root, 80) << " "
+              << b_search(root, 50) << "\n";   // 1 1 0
+}
+```
+
 ### 互斥集合的尋找與聯集 {#alg-disjoint-sets}
 
 **想法**：每個集合是一棵樹，用陣列 `parent[x]` 記每個元素的父節點，樹根的 `parent` 是 −1。兩個元素往上找到同一個樹根，就在同一個集合。
@@ -2192,6 +3686,39 @@ int main(void) {
     printf("%d\n", find(id('C')) == find(id('F')));   /* 1：同一個集合 */
     printf("F 的樹根 %c\n", 'A' + find(id('F')));     /* A */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-disjoint-sets-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+
+std::vector<int> parent(11, -1);               // A..K，一開始每個都是自己的樹根
+
+int find_root(int x) {
+    while (parent[x] != -1) x = parent[x];
+    return x;
+}
+
+void union_set(int x, int y) {
+    int rx = find_root(x), ry = find_root(y);
+    if (rx != ry) parent[ry] = rx;
+}
+
+int id(char c) { return c - 'A'; }
+
+int main() {
+    for (char c : std::string("BCD")) parent[id(c)] = id('A');
+    for (char c : std::string("FG"))  parent[id(c)] = id('E');
+    for (char c : std::string("IJK")) parent[id(c)] = id('H');
+
+    std::cout << (find_root(id('C')) == find_root(id('F'))) << "\n";   // 0
+    union_set(id('A'), id('G'));
+    std::cout << (find_root(id('C')) == find_root(id('F'))) << "\n";   // 1
+    std::cout << "F 的樹根 " << char('A' + find_root(id('F'))) << "\n"; // A
 }
 ```
 
@@ -2262,5 +3789,51 @@ int main(void) {
        課本的圖：p=0、a=11、h=100、y=101
        0/1 不同是同次數時左右擺法不同；長度都是 p 1、a 2、h 和 y 3 */
     return 0;
+}
+```
+
+#### C++ 程式 {#alg-huffman-cpp .fold}
+
+```cpp
+#include <iostream>
+#include <queue>
+#include <string>
+#include <vector>
+
+struct hnode {
+    char ch;
+    int freq;
+    hnode *l_child, *r_child;
+};
+
+struct ByFreq {                                // 讓 priority_queue 把次數「小」的放最上面
+    bool operator()(hnode *a, hnode *b) const { return a->freq > b->freq; }
+};
+
+hnode *huffman(const std::vector<hnode *> &leaves) {
+    std::priority_queue<hnode *, std::vector<hnode *>, ByFreq> pq(leaves.begin(), leaves.end());
+    while (pq.size() > 1) {
+        hnode *a = pq.top(); pq.pop();         // 最小
+        hnode *b = pq.top(); pq.pop();         // 次小
+        pq.push(new hnode{'*', a->freq + b->freq, b, a});   // 左：次小，右：最小
+    }
+    return pq.top();
+}
+
+void print_codes(hnode *p, const std::string &code) {
+    if (p->l_child == nullptr && p->r_child == nullptr) {
+        std::cout << p->ch << "：" << code << "（長度 " << code.size() << "）\n";
+        return;
+    }
+    print_codes(p->l_child, code + "1");       // 左 1
+    print_codes(p->r_child, code + "0");       // 右 0
+}
+
+int main() {
+    std::vector<hnode *> leaves = {new hnode{'h', 1, nullptr, nullptr}, new hnode{'y', 1, nullptr, nullptr},
+                                   new hnode{'a', 2, nullptr, nullptr}, new hnode{'p', 4, nullptr, nullptr}};
+    print_codes(huffman(leaves), "");
+    // 這支程式：h=111、y=110、a=10、p=0
+    // 長度一定是 p 1、a 2、h 和 y 3；0/1 的排法可能和 C 版、課本不同
 }
 ```

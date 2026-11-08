@@ -1,6 +1,6 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, type CSSProperties } from "react";
 import { Interactive } from "zyninote";
-import { Chip, Slider, caption, formula, muted, panel, row, tint } from "./ds-ui.tsx";
+import { Chip, Slider, StepBar, caption, formula, muted, panel, row, tint } from "./ds-ui.tsx";
 
 const FUNCS: { name: string; f: (n: number) => number }[] = [
   { name: "log n", f: (n) => Math.log2(n) },
@@ -154,6 +154,112 @@ export function FloatSteps() {
           <span>{m23}</span>
           {"\n"}符號(1)  指數(8)    假數(23)
         </div>
+      </div>
+    </Interactive>
+  );
+}
+
+const FRACS: [number, number, string][] = [[3, 4, "0.75"], [5, 8, "0.625"], [5, 16, "0.3125"], [1, 10, "0.1"]];
+
+/** Decimal fraction -> binary by repeated doubling, one step at a time. */
+export function FractionSteps() {
+  const [pick, setPick] = useState(0);
+  const [step, setStep] = useState(0);
+  const [n0, d, label] = FRACS[pick];
+  const rowsF: { cur: number; dbl: number; bit: number }[] = [];
+  let cur = n0;
+  while (cur !== 0 && rowsF.length < 8) {
+    const dbl = cur * 2;
+    const bit = dbl >= d ? 1 : 0;
+    rowsF.push({ cur, dbl, bit });
+    cur = bit ? dbl - d : dbl;
+  }
+  const ends = cur === 0;
+  const total = rowsF.length;
+  const s = Math.min(step, total - 1);
+  const shown = rowsF.slice(0, s + 1);
+  const val = (x: number) => (x / d).toFixed(4).replace(/0+$/, "").replace(/\.$/, "");
+  return (
+    <Interactive description="十進制小數轉二進制：反覆把小數部分乘 2，每次取出整數部分（0 或 1）當作下一個二進制位，剩下的小數繼續乘 2，直到小數部分變 0。0.75：×2=1.5 取 1，0.5×2=1.0 取 1，得 .11。0.625：1.25 取 1、0.5 取 0、1.0 取 1，得 .101。0.3125 得 .0101。0.1：0.2、0.4、0.8、1.6…，位元 0001100110011… 永遠不會結束，無限循環，所以 0.1 在電腦裡只能近似。">
+      <div style={panel}>
+        <div style={row}>
+          {FRACS.map(([, , l], k) => <Chip key={l} active={k === pick} onClick={() => { setPick(k); setStep(0); }}>{l}</Chip>)}
+        </div>
+        <div style={{ marginTop: "12px", display: "grid", gridTemplateColumns: "auto auto auto auto", gap: "6px 18px", fontFamily: "var(--mono)", fontSize: "var(--fs-sm)" }}>
+          <b>小數部分</b><b>× 2</b><b>取出的位元</b><b>剩下</b>
+          {shown.map((r, k) => (
+            <Fragment key={k}>
+              <span>{val(r.cur)}</span>
+              <span>{val(r.dbl)}</span>
+              <span style={{ background: tint(30), textAlign: "center", borderRadius: "4px" }}>{r.bit}</span>
+              <span>{val(r.bit ? r.dbl - d : r.dbl)}</span>
+            </Fragment>
+          ))}
+        </div>
+        <div style={{ ...formula, fontSize: "16px" }}>
+          {label} = 0.{shown.map((r) => r.bit).join("")}{s === total - 1 ? (ends ? "" : "…（無限循環）") : "…"}₂
+        </div>
+        <StepBar step={s} total={total} setStep={setStep} />
+        <p style={caption}>
+          {s < total - 1 ? "規則：乘 2 之後，整數部分（0 或 1）就是答案的下一位，把它拿掉，剩下的小數繼續乘 2。由上往下讀取出的位元。"
+            : ends ? "小數部分變成 0，結束。位元由上往下讀就是答案。"
+            : "小數部分永遠不會變 0（0.2→0.4→0.8→0.6→0.2 …繞圈），位元 0011 無限循環。所以 0.1 在電腦裡只能存近似值。"}
+        </p>
+      </div>
+    </Interactive>
+  );
+}
+
+function enc(x: number) {
+  const a = Math.abs(x);
+  const { intBits, frac } = toBin(a);
+  const all = intBits + frac;
+  const first = all.indexOf("1");
+  const e = intBits === "0" ? -(first - intBits.length + 1) : intBits.length - 1;
+  const mant = all.slice(first + 1).replace(/0+$/, "");
+  return { s: x < 0 ? 1 : 0, exp: (e + 128).toString(2).padStart(8, "0"), m: (mant + "0".repeat(23)).slice(0, 23) };
+}
+
+const DEC_NUMS = [-23.75, 5.5, 0.375, -59.5];
+
+/** Decode a 32-bit short float step by step, with the three fields colored. */
+export function FloatDecode() {
+  const [pick, setPick] = useState(0);
+  const [step, setStep] = useState(0);
+  const { s, exp, m } = enc(DEC_NUMS[pick]);
+  const e = parseInt(exp, 2) - 128;
+  const mt = m.replace(/0+$/, "");
+  const digits = "1" + mt;
+  const pp = 1 + e;
+  const moved = pp <= 0 ? "0." + "0".repeat(-pp) + digits
+    : pp >= digits.length ? digits + "0".repeat(pp - digits.length)
+    : digits.slice(0, pp) + "." + digits.slice(pp);
+  const dec = (s ? -1 : 1) * (1 + parseInt(m, 2) / 2 ** 23) * 2 ** e;
+  const fieldStyle = (on: boolean, t: number): CSSProperties => ({ background: on ? tint(t) : "transparent", borderRadius: "4px", padding: "0 2px", outline: on ? "1px solid var(--text)" : "none" });
+  const lines = [
+    "先把 32 個位元切成三格：1 + 8 + 23",
+    `符號位元是 ${s} → ${s ? "負數" : "正數"}`,
+    `指數欄 ${exp} = ${parseInt(exp, 2)}，減掉偏移 128 → 真正的指數 e = ${e}`,
+    `假數欄補回開頭省略的「1.」：1.${mt || "0"}`,
+    `乘上 2^${e}：小數點往${e >= 0 ? "右" : "左"}移 ${Math.abs(e)} 位 → ${moved}₂`,
+    `轉十進制：整數部分按 …8 4 2 1，小數部分按 ½ ¼ ⅛ … 加起來，再加上符號 → ${dec}`,
+  ];
+  return (
+    <Interactive description="短浮點解碼六步（照課本偏移 128）。以 11000010111011100000000000000000 為例：切成 1｜10000101｜11011100000000000000000；符號 1 為負；指數 10000101 = 133，133 − 128 = 5；假數補回開頭的 1 得 1.110111；乘 2^5 即小數點右移 5 位得 111011.1；轉十進制 32+16+8+2+1+0.5 = 59.5，加負號得 −59.5。">
+      <div style={panel}>
+        <div style={row}>
+          {DEC_NUMS.map((v, k) => <Chip key={v} active={k === pick} onClick={() => { setPick(k); setStep(0); }}>{enc(v).s}{enc(v).exp}…</Chip>)}
+        </div>
+        <div style={{ ...formula, fontSize: "14px", overflowWrap: "anywhere" }}>
+          <span style={fieldStyle(step >= 1, 30)}>{s}</span>{" "}
+          <span style={fieldStyle(step >= 2, 18)}>{exp}</span>{" "}
+          <span style={fieldStyle(step >= 3, 40)}>{m}</span>
+          {"\n"}符號(1)  指數(8)    假數(23)
+        </div>
+        <ol start={0} style={{ margin: "12px 0 0", paddingLeft: "22px", lineHeight: 1.9, fontSize: "var(--fs-sm)", listStyle: "none" }}>
+          {lines.slice(0, step + 1).map((l, k) => <li key={k} style={{ fontWeight: k === step ? 700 : 400 }}>{k === step ? "▶ " : "✓ "}{l}</li>)}
+        </ol>
+        <StepBar step={step} total={lines.length} setStep={setStep} />
       </div>
     </Interactive>
   );

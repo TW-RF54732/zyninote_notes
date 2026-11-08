@@ -15,14 +15,14 @@ function build(items: [string, number][]) {
   let id = 0;
   while (list.length > 1) {
     const [a, b, ...rest] = list;
-    const n: H = { key: `n${++id}`, w: a.w + b.w, l: a, r: b };
+    const n: H = { key: `n${++id}`, w: a.w + b.w, l: b, r: a };
     const pos = rest.findIndex((x) => x.w > n.w);
     list = pos < 0 ? [...rest, n] : [...rest.slice(0, pos), n, ...rest.slice(pos)];
     const name = (x: H) => (x.ch ? `${x.ch}(${x.w})` : `(${x.w})`);
     snaps.push({ forest: list, merged: n.key, msg: `取出次數最少的兩個 ${name(a)}、${name(b)}，合成一個新節點，次數 ${a.w} + ${b.w} = ${n.w}，放回去。` });
   }
   const codes: { ch: string; w: number; code: string }[] = [];
-  const walk = (h: H, c: string) => { if (h.ch) codes.push({ ch: h.ch, w: h.w, code: c || "0" }); if (h.l) walk(h.l, c + "0"); if (h.r) walk(h.r, c + "1"); };
+  const walk = (h: H, c: string) => { if (h.ch) codes.push({ ch: h.ch, w: h.w, code: c || "0" }); if (h.l) walk(h.l, c + "1"); if (h.r) walk(h.r, c + "0"); };
   walk(list[0], "");
   codes.sort((x, y) => y.w - x.w);
   return { snaps, codes, total: list[0].w };
@@ -61,7 +61,7 @@ export default function Huffman() {
             {"\n"}平均編碼長度 = {avg.toFixed(2)} 位元
           </div>
         )}
-        <div style={muted}>同次數時這裡把排在前面的放左邊；課本的圖左右可能不同，但每個字元的編碼長度和平均長度都一樣。</div>
+        <div style={muted}>依課本規則：左分支標 1、右分支標 0；次數較少的放右邊。課本的圖在同次數時左右擺法可能不同，但每個字元的編碼長度和平均長度都一樣。</div>
         <StepBar step={step} total={snaps.length} setStep={setStep} />
       </div>
     </Interactive>
